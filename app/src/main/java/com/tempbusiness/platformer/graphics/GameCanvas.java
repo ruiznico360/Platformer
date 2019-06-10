@@ -31,7 +31,7 @@ public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-//        Game.CONTROLS.handleTouchInput(event);
+        game.touchAdapter.handleTouchInput(event);
         return true;
     }
     private synchronized void handleGraphics(Canvas canvas) {

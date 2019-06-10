@@ -1,34 +1,27 @@
 package com.tempbusiness.platformer.gameobject;
 
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
+import android.graphics.Rect;
 
+import com.tempbusiness.platformer.graphics.Display;
 import com.tempbusiness.platformer.load.FileLoader.Image;
+import com.tempbusiness.platformer.util.ImageUtil;
 
-public abstract class GameObject {
-    public float x, y, w, h;
-    public Paint color;
-    public Image img;
+public class GameObject extends Box {
 
     public GameObject(float x, float y, float w, float h, int color) {
-        this.x = x;
-        this.y = y;
-        this.w = w;
-        this.h = h;
-
-        Paint p = new Paint();
-        p.setColor(color);
-
-        this.color = p;
+        super(x,y,w,h,color);
     }
     public GameObject(float x, float y, float w, float h, Image img) {
-        this(x,y,w,h,0);
-        this.img = img;
+        super(x,y,w,h,img);
     }
 
-    public void tick() {
-
+    public void render(Canvas canvas) {
+        Rect dst = Display.genRect(x,y,w,h);
+        if (img == null) {
+            canvas.drawRect(dst, color);
+        }else{
+            canvas.drawBitmap(img.img, null, dst, null);
+        }
     }
-    public abstract void render(Canvas canvas);
 }

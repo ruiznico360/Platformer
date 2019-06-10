@@ -14,7 +14,7 @@ public class FileLoader {
     public static void setup() {
         for (Image i : Image.values()) {
             if (i.name != null) i.img = BitmapFactory.decodeResource(Util.appContext.getResources(), Util.appContext.getResources().getIdentifier(i.name, "drawable", Util.appContext.getPackageName()));
-//            if (i.width != -1) i.img = ImageUtil.resizeToScale(i.img, Display.BLOCK_SIZE * i.width);
+            if (i.width != -1) i.img = ImageUtil.resizeToScale(i.img, Display.BLOCK_SIZE * i.width);
         }
     }
     public enum Image {

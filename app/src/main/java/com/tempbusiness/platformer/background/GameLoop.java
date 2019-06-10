@@ -1,5 +1,7 @@
 package com.tempbusiness.platformer.background;
 
+import android.os.Handler;
+
 import com.tempbusiness.platformer.util.Util;
 
 public class GameLoop implements Runnable {
@@ -16,7 +18,12 @@ public class GameLoop implements Runnable {
         game.handler.tick();
     }
     public void render() {
-        game.canvas.invalidate();
+        game.ui.post(new Runnable() {
+            @Override
+            public void run() {
+               game.canvas.invalidate();
+            }
+        });
     }
 
     public synchronized void start() {

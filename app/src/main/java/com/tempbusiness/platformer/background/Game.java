@@ -1,6 +1,7 @@
 package com.tempbusiness.platformer.background;
 
 import android.app.Activity;
+import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
@@ -15,6 +16,7 @@ public class Game extends Activity {
     public GameLoop gameLoop;
     public GameCanvas canvas;
     public GameHandler handler;
+    public Handler ui;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +44,9 @@ public class Game extends Activity {
         FileLoader.setup();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
+        touchAdapter = new TouchAdapter(this);
         handler = new MainMenu(this);
+        ui = new Handler();
         gameLoop = new GameLoop(this);
         gameLoop.start();
         canvas = new GameCanvas(this);
