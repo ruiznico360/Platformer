@@ -16,7 +16,7 @@ public class MainMenu extends GameHandler {
     public MainMenu(Game game) {
         this.game = game;
 
-        //you are gay
+        // no u
         gameObjects.add(new Box(10,100, Display.WIDTH / 2, Display.HEIGHT / 2, Color.YELLOW));
         gameObjects.add(new Box(Display.WIDTH / 2 + 10,Display.HEIGHT / 2 + 100, Display.WIDTH / 2, Display.HEIGHT / 2, FileLoader.Image.BLOCK));
 
