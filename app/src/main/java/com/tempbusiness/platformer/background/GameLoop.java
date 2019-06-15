@@ -1,11 +1,13 @@
 package com.tempbusiness.platformer.background;
 
 import android.os.Handler;
+import android.os.SystemClock;
 
 import com.tempbusiness.platformer.util.Util;
 
 public class GameLoop implements Runnable {
     private boolean running = false;
+    public int ticksSinceStart;
     public Game game;
     public static final int FRAMES_PER_SECOND = 60;
     public boolean PAUSE_LOOP = true;
@@ -16,6 +18,7 @@ public class GameLoop implements Runnable {
     }
     public void tick(){
         game.handler.tick();
+        ticksSinceStart++;
     }
     public void render() {
         game.ui.post(new Runnable() {
@@ -49,8 +52,16 @@ public class GameLoop implements Runnable {
             lastTime = now;
             while(delta >= 1){
                 if (!PAUSE_LOOP) {
+//                    long start = SystemClock.uptimeMillis();
+//                    tick();
+//                    Util.log("time to tick: " + (SystemClock.uptimeMillis()-start) + " " + game.handler.gameObjects.size());
+//                    start = SystemClock.uptimeMillis();
+//                    render();
+//                    Util.log("time to render: " + (SystemClock.uptimeMillis()-start));
+
                     tick();
                     render();
+
                 }
                 updates++;
                 delta--;

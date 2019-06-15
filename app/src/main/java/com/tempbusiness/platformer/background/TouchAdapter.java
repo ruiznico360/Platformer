@@ -1,16 +1,10 @@
 package com.tempbusiness.platformer.background;
 
-import android.graphics.Color;
-import android.graphics.PointF;
 import android.graphics.Rect;
 import android.view.MotionEvent;
-import android.view.TouchDelegate;
 
-import com.tempbusiness.platformer.gameobject.Box;
 import com.tempbusiness.platformer.util.ImageUtil;
-import com.tempbusiness.platformer.util.Util;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class TouchAdapter {
@@ -29,31 +23,38 @@ public class TouchAdapter {
         if (maskedAction == MotionEvent.ACTION_DOWN || maskedAction == MotionEvent.ACTION_POINTER_DOWN) {
             activePointers.put(pointerId, new Coords(event.getX(pointerIndex), event.getY(pointerIndex)));
 
-            for (int i = 0; i < game.handler.touchables.size(); i++) {
-                boolean interesct = false;
-                Rect touchableBounds = ImageUtil.rect(game.handler.touchables.get(i).x, game.handler.touchables.get(i).y, game.handler.touchables.get(i).w, game.handler.touchables.get(i).h);
-
-                for (Coords c : activePointers.values()) {
-                    if (touchableBounds.contains((int)c.x, (int)c.y)) {
-                        interesct = true;
-                    }
-                }
-
-                if (!game.handler.touchables.get(i).touching && interesct) {
-                    game.handler.touchables.get(i).down();
-                }
-            }
+            handleDown();
         }else if (maskedAction == MotionEvent.ACTION_MOVE) {
             for (int size = event.getPointerCount(), i = 0; i < size; i++) {
                 Coords b = activePointers.get(event.getPointerId(i));
                 b.x = event.getX(i);
                 b.y = event.getY(i);
             }
+
+            handleDown();
         }else if (maskedAction == MotionEvent.ACTION_UP || maskedAction == MotionEvent.ACTION_POINTER_UP) {
             handleUp(pointerId);
         }else if (maskedAction == MotionEvent.ACTION_CANCEL) {
             for (int size = event.getPointerCount(), i = 0; i < size; i++) {
                 handleUp(event.getPointerId(i));
+            }
+        }
+    }
+    public void handleDown() {
+        for (int i = 0; i < game.handler.touchables.size(); i++) {
+            boolean interesct = false;
+            Rect touchableBounds = ImageUtil.rect(game.handler.touchables.get(i).x, game.handler.touchables.get(i).y, game.handler.touchables.get(i).w, game.handler.touchables.get(i).h);
+
+            for (Coords c : activePointers.values()) {
+                if (touchableBounds.contains((int)c.x, (int)c.y)) {
+                    interesct = true;
+                }
+            }
+
+            if (!game.handler.touchables.get(i).touching && interesct) {
+                game.handler.touchables.get(i).down();
+            }else if (game.handler.touchables.get(i).touching && !interesct) {
+                game.handler.touchables.get(i).up();
             }
         }
     }

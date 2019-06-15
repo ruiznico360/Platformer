@@ -2,7 +2,7 @@ package com.tempbusiness.platformer.background;
 
 import android.graphics.Canvas;
 
-import com.tempbusiness.platformer.gameobject.Graphic;
+import com.tempbusiness.platformer.graphicobjects.Graphic;
 
 import java.util.ArrayList;
 

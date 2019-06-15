@@ -1,4 +1,4 @@
-package com.tempbusiness.platformer.gameobject;
+package com.tempbusiness.platformer.graphicobjects;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
