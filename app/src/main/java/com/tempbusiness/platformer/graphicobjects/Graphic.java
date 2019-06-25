@@ -1,13 +1,13 @@
 package com.tempbusiness.platformer.graphicobjects;
 
-import android.graphics.Canvas;
 import android.graphics.Paint;
 
+import com.tempbusiness.platformer.graphics.Renderer;
 import com.tempbusiness.platformer.load.FileLoader.Image;
 
 public abstract class Graphic {
     public float x, y, w, h;
-    public Paint color;
+    public int color;
     public Image img;
 
     public Graphic(float x, float y, float w, float h, int color) {
@@ -15,11 +15,7 @@ public abstract class Graphic {
         this.y = y;
         this.w = w;
         this.h = h;
-
-        Paint p = new Paint();
-        p.setColor(color);
-
-        this.color = p;
+        this.color = color;
     }
     public Graphic(float x, float y, float w, float h, Image img) {
         this(x,y,w,h,0);
@@ -29,5 +25,5 @@ public abstract class Graphic {
     public void tick() {
 
     }
-    public abstract void render(Canvas canvas);
+    public abstract void render(Renderer canvas);
 }

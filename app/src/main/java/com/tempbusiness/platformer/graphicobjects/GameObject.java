@@ -8,7 +8,9 @@ import android.graphics.RectF;
 
 import com.tempbusiness.platformer.game.Platformer;
 import com.tempbusiness.platformer.graphics.Display;
+import com.tempbusiness.platformer.graphics.Renderer;
 import com.tempbusiness.platformer.load.FileLoader.Image;
+import com.tempbusiness.platformer.util.ImageUtil;
 
 public class GameObject extends Box {
     public Platformer handler;
@@ -22,34 +24,32 @@ public class GameObject extends Box {
         this.handler = handler;
     }
 
-    public void render(Canvas canvas) {
-        Rect dst = Display.genRect(x,y,w,h);
-        if (img == null) {
-            canvas.drawRect(dst, color);
-        }else{
-            canvas.drawBitmap(img.img, null, dst, null);
-        }
+    public void render(Renderer canvas) {
+        renderGameObject(new Renderer.GRenderer(canvas.canvas, handler));
     }
 
+    public void renderGameObject(Renderer.GRenderer canvas) {
+        if (img == null) {
+            canvas.drawRect(x,y,w,h, color);
+        }else{
+            canvas.drawBitmap(x,y,w,h, img);
+        }
+    }
     public Hitbox getHitbox() {
         return new Hitbox(x,y,w,h);
     }
 
-    public class Hitbox {
-        public RectF l,r,t,b, cTL, cTR, cBL, cBR;
+    public static class Hitbox {
+        public RectF full, l,r,t,b, cTL, cTR, cBL, cBR;
 
 
         public Hitbox(float x, float y, float w, float h) {
             final float overlap = indent;
+            full = Display.genRectF(x,y,w,h);
             l = Display.genRectF(x, y + h * overlap, w * 0.5f, h * (1f- 2 * overlap));
             r = Display.genRectF(x + w * 0.5f, y + h * overlap, w * 0.5f, h * (1f- 2 * overlap));
             t = Display.genRectF(x + w * indent, y + h * (1f - indent), w * (1f - 2*overlap), h * indent);
             b = Display.genRectF(x + w * indent, y, w * (1f - 2*overlap), h * indent);
-
-//            cTR = Display.genRectF(x + w * (1f - indent),y, w * indent, h * indent);
-//            cTL = Display.genRectF(x,y, w * indent, h * indent);
-//            cBL = Display.genRectF(x,y + h * (1f - indent), w * indent, h * indent);
-//            cBR = Display.genRectF(x +  w * (1f - indent),y + h * (1f - indent), w * indent, h * indent);
 
         }
     }

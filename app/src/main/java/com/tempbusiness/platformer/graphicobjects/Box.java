@@ -1,8 +1,8 @@
 package com.tempbusiness.platformer.graphicobjects;
 
-import android.graphics.Canvas;
 import android.graphics.Rect;
 
+import com.tempbusiness.platformer.graphics.Renderer;
 import com.tempbusiness.platformer.load.FileLoader.Image;
 import com.tempbusiness.platformer.util.ImageUtil;
 
@@ -15,12 +15,12 @@ public class Box extends Graphic {
         super(x,y,w,h,img);
     }
 
-    public void render(Canvas canvas) {
+    public void render(Renderer canvas) {
         Rect dst = ImageUtil.rect(x,y,w,h);
         if (img == null) {
             canvas.drawRect(dst, color);
         }else{
-            canvas.drawBitmap(img.img, null, dst, null);
+            canvas.drawBitmap(dst, img);
         }
     }
 }

@@ -1,10 +1,9 @@
 package com.tempbusiness.platformer.graphicobjects;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 
 import com.tempbusiness.platformer.game.Platformer;
+import com.tempbusiness.platformer.game.level.Room;
 import com.tempbusiness.platformer.load.FileLoader.Image;
 
 import java.util.Random;
@@ -25,8 +24,23 @@ public class Block extends GameObject {
 
         }
     }
+    public static class Climbable extends GameObject {
+        public Climbable(float x, float y, Platformer handler) {
+            super(x,y,1,1, Color.GREEN, handler);
+        }
+    }
 
-    public void render(Canvas canvas) {
-        super.render(canvas);
+    public static class Water extends GameObject {
+        public Water(float x, float y, Platformer handler) {
+            super(x,y,1,1,Color.BLUE, handler);
+        }
+    }
+
+    public static class Warpzone extends GameObject {
+        public Room room;
+        public Warpzone(float x, float y, Platformer handler, Room r) {
+            super(x,y,1,1, Color.BLACK, handler);
+            this.room = r;
+        }
     }
 }

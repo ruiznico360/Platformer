@@ -17,16 +17,35 @@ import java.util.ArrayList;
 
 public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
     public Game game;
+    public Transition currentTransition;
+
     public GameCanvas(Game game) {
         super(Util.appContext);
         this.game = game;
         getHolder().addCallback(this);
         setWillNotDraw(false);
+
+        Transition.setupResources();
     }
 
     @Override
     public void onDraw(Canvas canvas) {
-        handleGraphics(canvas);
+        if (currentTransition == null) {
+            game.gameLoop.tick();
+            handleGraphics(new Renderer(canvas));
+        }else{
+            currentTransition.tick();
+            handleGraphics(new Renderer(canvas));
+            currentTransition.render(canvas);
+
+            if (currentTransition.counter == currentTransition.duration) {
+                Util.log();
+                Runnable r = currentTransition.end;
+                currentTransition = null;
+                if (r != null) r.run();
+            }
+        }
+
     }
 
     @Override
@@ -34,7 +53,7 @@ public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
         game.touchAdapter.handleTouchInput(event);
         return true;
     }
-    private synchronized void handleGraphics(Canvas canvas) {
+    private synchronized void handleGraphics(Renderer canvas) {
         game.handler.render(canvas);
     }
     public void surfaceDestroyed(SurfaceHolder holder) {}

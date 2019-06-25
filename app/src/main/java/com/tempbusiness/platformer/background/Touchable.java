@@ -1,5 +1,7 @@
 package com.tempbusiness.platformer.background;
 
+import android.text.method.Touch;
+
 public abstract class Touchable {
     public float x,y,w,h;
     public boolean touching = false;
@@ -20,4 +22,18 @@ public abstract class Touchable {
     }
     public abstract void downAction();
     public abstract void upAction();
+
+    public static Touchable basic(float x, float y, float w, float h) {
+        return new Touchable(x,y,w,h) {
+            @Override
+            public void downAction() {
+
+            }
+
+            @Override
+            public void upAction() {
+
+            }
+        };
+    }
 }

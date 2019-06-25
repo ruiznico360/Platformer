@@ -26,10 +26,14 @@ public class Util {
         Display.WIDTH = metrics.widthPixels;
         Display.HEIGHT = metrics.heightPixels;
         Display.BLOCK_SIZE = Display.WIDTH / Platformer.BLOCKS_PER_SCREEN;
+        Display.OFFSET_SCREEN_X = (int)((float)(Display.WIDTH % Platformer.BLOCKS_PER_SCREEN) / 2f);
         appContext = act;
     }
 
     public static int randColor() {
-        return Color.rgb(new Random().nextInt(256), new Random().nextInt(256), new Random().nextInt(256));
+        return Color.rgb(randInt(256), randInt(256), randInt(256));
+    }
+    public static int randInt(int max) {
+        return new Random().nextInt(max);
     }
 }

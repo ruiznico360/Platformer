@@ -8,9 +8,8 @@ import com.tempbusiness.platformer.graphics.Display;
 import com.tempbusiness.platformer.load.FileLoader;
 
 public class MainMenu extends GameHandler {
-    public MainMenu(Game gameInstance) {
-        super(gameInstance);
-        gameObjects.add(new Box(0,0, Display.WIDTH, Display.HEIGHT, FileLoader.Image.BLOCK));
+    public MainMenu() {
+        graphics.add(new Box(0,0, Display.WIDTH, Display.HEIGHT, FileLoader.Image.BLOCK));
 
         Touchable touch = new Touchable(0,0,Display.WIDTH, Display.HEIGHT) {
             @Override
