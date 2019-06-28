@@ -3,11 +3,9 @@ package com.tempbusiness.platformer.graphicobjects;
 import android.graphics.Color;
 
 import com.tempbusiness.platformer.game.Platformer;
-import com.tempbusiness.platformer.graphics.Display;
-import com.tempbusiness.platformer.util.Util;
 
 public class Player extends Entity {
-    public static final float MAX_RUNNING_SPEED = 0.2f, FRICTION_RUNNING = 0.01f, RUN_ACC = 0.0025f, JUMP_SPEED = 0.2f, CLIMB_SPEED_X = 0.04f,CLIMB_SPEED_Y = 0.08f,MAX_SWIM_SPEED = MAX_RUNNING_SPEED / 3.5f, SWIM_ACC = RUN_ACC * 0.75f, SWIM_FORCE = SWIM_ACC * 20, SWIM_ASCEND = 0.065f, MAX_SWIM_ASCEND = 0.1f, GRAVITY = -0.01f, TERM_VEL = -2,SWIM_GRAVITY = GRAVITY / 8, SWIM_TERM_VEL = TERM_VEL / 16;
+    public static final float MAX_RUNNING_SPEED = 0.2f, FRICTION_RUNNING = 0.01f, RUN_ACC = 0.0025f, JUMP_SPEED = 0.2f, BOUNCE_ENEMY = 0.15f,CLIMB_SPEED_X = 0.04f,CLIMB_SPEED_Y = 0.08f,MAX_SWIM_SPEED = MAX_RUNNING_SPEED / 3.5f, SWIM_ACC = RUN_ACC * 0.75f, SWIM_FORCE = SWIM_ACC * 20, SWIM_ASCEND = 0.065f, MAX_SWIM_ASCEND = 0.1f,SWIM_GRAVITY = GRAVITY / 16, SWIM_TERM_VEL = TERM_VEL / 16;
     public static final int JUMP_FRAMES = 20;
     public static final String WALK = "WALK", CLIMB = "CLIMB", SWIM = "SWIM";
     public float inputAcc, inputVel;
@@ -68,7 +66,7 @@ public class Player extends Entity {
             velY = 0;
         }
 
-        Hitbox collision = blockCollision();
+        Hitbox collision = gameObjectCollision();
         if (collision.l != null || collision.r != null) inputVel = 0;
         if (collision.t != null) ascendCounter = JUMP_FRAMES;
 
@@ -86,6 +84,17 @@ public class Player extends Entity {
             } else {
                 accY = (SWIM_TERM_VEL - velY) / 10;
             }
+        }
+    }
+
+    public void entityCollsion(Hitbox collision, Entity en) {
+        if (collision.t != null) {
+            handler.graphics.remove(en);
+
+            velY = BOUNCE_ENEMY;
+            ascendCounter = 1;
+        }else{
+            handler.currentRoom.reset();
         }
     }
 }

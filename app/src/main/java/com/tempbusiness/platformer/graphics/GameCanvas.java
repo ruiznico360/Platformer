@@ -11,6 +11,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
 import com.tempbusiness.platformer.background.Game;
+import com.tempbusiness.platformer.game.Platformer;
 import com.tempbusiness.platformer.util.Util;
 
 import java.util.ArrayList;
@@ -30,22 +31,21 @@ public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void onDraw(Canvas canvas) {
+        game.handler.audioPlayer.tick();
         if (currentTransition == null) {
             game.gameLoop.tick();
             handleGraphics(new Renderer(canvas));
-        }else{
+        } else {
             currentTransition.tick();
             handleGraphics(new Renderer(canvas));
             currentTransition.render(canvas);
 
             if (currentTransition.counter == currentTransition.duration) {
-                Util.log();
                 Runnable r = currentTransition.end;
                 currentTransition = null;
                 if (r != null) r.run();
             }
         }
-
     }
 
     @Override

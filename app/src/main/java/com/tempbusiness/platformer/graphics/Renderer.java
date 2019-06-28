@@ -66,7 +66,7 @@ public class Renderer {
             return (int)(Display.displayX(gameX) + handler.cam.x + Display.OFFSET_SCREEN_X);
         }
         public static int absoluteY(float gameY, Platformer handler) {
-            return (int)(Display.displayY(gameY) + handler.cam.x);
+            return (int)(Display.displayY(gameY) + handler.cam.y);
         }
     }
 }

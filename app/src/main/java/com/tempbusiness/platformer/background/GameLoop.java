@@ -6,10 +6,11 @@ import android.os.SystemClock;
 import com.tempbusiness.platformer.util.Util;
 
 public class GameLoop implements Runnable {
-    private boolean running = false;
+    public boolean running = false;
     public Game game;
-    public static final int FRAMES_PER_SECOND = 60;
+    public static final int FRAMES_PER_SECOND = 60 ;
     private Thread thread;
+    public Runnable stop;
 
     public GameLoop(Game game) {
         this.game = game;
@@ -36,7 +37,6 @@ public class GameLoop implements Runnable {
         thread.start();
     }
     public void run() {
-        Util.log("Thread has begun");
         long lastTime = System.nanoTime();
         double amountOfTicks = FRAMES_PER_SECOND;
         double ns = 1000000000 / amountOfTicks;

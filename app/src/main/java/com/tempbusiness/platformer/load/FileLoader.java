@@ -1,8 +1,12 @@
 package com.tempbusiness.platformer.load;
 
+import android.content.ContentResolver;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
+import android.media.MediaMetadataRetriever;
+import android.net.Uri;
 
 import com.tempbusiness.platformer.R;
 import com.tempbusiness.platformer.graphics.Display;
@@ -34,5 +38,15 @@ public class FileLoader {
         }
 
         Image() {}
+    }
+    public enum Sound {
+        JUMP(R.raw.jump), OVERWORLD(R.raw.overworld), TITLE(R.raw.title);
+
+        public int name;
+
+        Sound(int name) {
+            this.name = name;
+        }
+
     }
 }

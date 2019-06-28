@@ -21,8 +21,8 @@ public class Camera {
         screen_y = Display.HEIGHT / 2;
     }
 
-    public void tick() {
-        if (handler.player.velX != 0) {
+    public void tick(boolean force) {
+        if (handler.player.velX != 0 || force) {
             float player_pixel_x = handler.player.getHitbox().l.left;
             float screenPosX = x + Display.OFFSET_SCREEN_X + player_pixel_x;
             screen_x = handler.player.velX > 0 ? Math.max(screen_x - X_SPEED, IDEAL_X_RIGHT) : Math.min(screen_x + X_SPEED, IDEAL_X_LEFT);
@@ -38,7 +38,7 @@ public class Camera {
 
             x = newX;
         }
-        if (handler.player.velY != 0) {
+        if (handler.player.velY != 0 || force) {
             float player_pixel_y = handler.player.getHitbox().t.top;
             float newY;
 

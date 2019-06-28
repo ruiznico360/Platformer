@@ -52,6 +52,9 @@ public class GameObject extends Box {
             b = Display.genRectF(x + w * indent, y, w * (1f - 2*overlap), h * indent);
 
         }
+        public Hitbox() {
+
+        }
     }
     public void drawHitbox(Canvas canvas) {
         Hitbox h = getHitbox();

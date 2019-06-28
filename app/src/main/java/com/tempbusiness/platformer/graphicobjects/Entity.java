@@ -1,14 +1,14 @@
 package com.tempbusiness.platformer.graphicobjects;
 
 import com.tempbusiness.platformer.game.Platformer;
-import com.tempbusiness.platformer.graphics.Renderer;
 import com.tempbusiness.platformer.load.FileLoader;
 import com.tempbusiness.platformer.util.Util;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public abstract class Entity extends GameObject{
-    public static final float MIN_VEL = 0.0001f;
+    public static final float MIN_VEL = 0.0001f,GRAVITY = -0.01f, TERM_VEL = -2;
     public float velX, velY, accX, accY;
     public boolean grounded = false;
     public Entity(float x, float y, float w, float h, int color, Platformer handler) {
@@ -29,13 +29,13 @@ public abstract class Entity extends GameObject{
             velY = 0;
         }
 
-        blockCollision();
+        gameObjectCollision();
     }
     public void tick() {
         updateLocation();
     }
 
-    public Hitbox blockCollision() {
+    public Hitbox gameObjectCollision() {
         float iterations = 1;
         boolean hl = false, hr = false, ht = false, hb = false;
         if (Math.max(Math.abs(velX), Math.abs(velY)) > indent) {
@@ -43,14 +43,22 @@ public abstract class Entity extends GameObject{
         }
 
         ArrayList<Block> blockList = new ArrayList<>();
+        ArrayList<Entity> entityList = new ArrayList<>();
         int sX = (int)Math.floor(Math.min(x, x + velX)), sY = (int)Math.floor(Math.min(y, y + velY)), fX = (int)Math.ceil(Math.max(x, x + velX)), fY = (int)Math.ceil(Math.max(y, y + velY));
 
         for (int i = 0; i < handler.graphics.size(); i++) {
-            if (!(handler.graphics.get(i) instanceof Block)) continue;
-            Block bl = ((Block)handler.graphics.get(i));
+            if (handler.graphics.get(i) instanceof Block) {
+                Block bl = ((Block) handler.graphics.get(i));
 
-            if (bl.x >= sX && bl.x <= fX && bl.y >= sY && bl.y <= fY) {
-                blockList.add(bl);
+                if (bl.x >= sX && bl.x <= fX && bl.y >= sY && bl.y <= fY) {
+                    blockList.add(bl);
+                }
+            }else if (handler.graphics.get(i) instanceof Entity) {
+                Entity bl = ((Entity)handler.graphics.get(i));
+
+                if (bl != this) {
+                    entityList.add(bl);
+                }
             }
         }
 
@@ -73,15 +81,12 @@ public abstract class Entity extends GameObject{
                     tempY = (bl.y + 1.0f);
                     hb = true;
                 }
-            }
-//            for (int i = 0; i < handler.graphics.size(); i++) {
-//                if (!(handler.graphics.get(i) instanceof Block)) continue;
-//                Block bl = ((Block)handler.graphics.get(i));
-            for (Block bl : blockList) {
-                Hitbox h = new Hitbox(tempX, tempY, w, this.h);
-                Hitbox b = bl.getHitbox();
+//            }
+//            for (Block bl : blockList) {
+//                Hitbox h = new Hitbox(tempX, tempY, w, this.h);
+//                Hitbox b = bl.getHitbox();
 
-                if (h.l.intersect(b.r)) {
+                else if (h.l.intersect(b.r)) {
                     velX = 0;
                     accX = 0;
                     tempX = (bl.x + 1.0f);
@@ -91,6 +96,35 @@ public abstract class Entity extends GameObject{
                     accX = 0;
                     tempX = (bl.x - 1.0f);
                     hr = true;
+                }
+            }
+            Entity[] eList = new Entity[entityList.size()];
+            entityList.toArray(eList);
+
+            for (Entity e : eList) {
+                Hitbox h = new Hitbox(tempX, tempY, w, this.h);
+                Hitbox b = e.getHitbox();
+                Hitbox interact = new Hitbox();
+                if (h.t.intersect(b.b)) {
+                    interact.b = b.b;
+                    entityCollsion(interact,e);
+                    entityList.remove(e);
+//                    break;
+                }else if (h.b.intersect(b.t)) {
+                    interact.t = b.t;
+                    entityCollsion(interact,e);
+                    entityList.remove(e);
+//                    break;
+                }else if (h.l.intersect(b.r)) {
+                    interact.r = b.r;
+                    entityCollsion(interact,e);
+                    entityList.remove(e);
+//                    break;
+                }else if (h.r.intersect(b.l)) {
+                    interact.l = b.l;
+                    entityCollsion(interact,e);
+                    entityList.remove(e);
+//                    break;
                 }
             }
 
@@ -116,4 +150,8 @@ public abstract class Entity extends GameObject{
         accY = 0;
     }
     public abstract void gravity();
+
+    public void entityCollsion(Hitbox collision, Entity en) {
+
+    }
 }

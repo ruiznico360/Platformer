@@ -12,6 +12,7 @@ public class GameHandler {
     public ArrayList<Touchable> touchables = new ArrayList<>();
     public int ticksSinceStart;
     public Game game;
+    public AudioPlayer audioPlayer;
 
     public void tick() {
         superTick();

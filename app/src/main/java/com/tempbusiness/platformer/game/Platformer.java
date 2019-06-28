@@ -7,7 +7,10 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
+import android.media.MediaPlayer;
 
+import com.tempbusiness.platformer.R;
+import com.tempbusiness.platformer.background.AudioPlayer;
 import com.tempbusiness.platformer.background.Game;
 import com.tempbusiness.platformer.background.GameHandler;
 import com.tempbusiness.platformer.background.Touchable;
@@ -22,6 +25,7 @@ import com.tempbusiness.platformer.graphicobjects.Player;
 import com.tempbusiness.platformer.graphics.Display;
 import com.tempbusiness.platformer.graphics.Renderer;
 import com.tempbusiness.platformer.graphics.Transition;
+import com.tempbusiness.platformer.load.FileLoader;
 import com.tempbusiness.platformer.util.ImageUtil;
 import com.tempbusiness.platformer.util.Util;
 
@@ -38,10 +42,12 @@ public class Platformer extends GameHandler {
 
 
     public Platformer(Game gameInstance) {
+        this.audioPlayer = new AudioPlayer(this);
         this.game = gameInstance;
         this.cam = new Camera(this);
 
        changeRoom(new Room(this, Room.ID.L1_1));
+       audioPlayer.playMusic(FileLoader.Sound.OVERWORLD);
     }
 
     public void changeRoom(Room r) {
@@ -53,6 +59,7 @@ public class Platformer extends GameHandler {
 
         player = new Player(currentRoom.pStartX, currentRoom.pStartY,this);
         graphics.add(player);
+        cam.tick(true);
 
         setupControls();
     }
@@ -97,6 +104,8 @@ public class Platformer extends GameHandler {
             if (jump.area.touching) {
                 if (player.ascendCounter == Player.JUMP_FRAMES) return;
 
+                if (player.ascendCounter == 0) audioPlayer.play(FileLoader.Sound.JUMP);
+
                 player.ascendCounter++;
                 player.velY = Player.JUMP_SPEED;
             } else {
@@ -119,18 +128,18 @@ public class Platformer extends GameHandler {
                 player.velX = 0;
             }
 
-            if (jump.area.touching) {
-                player.moveState = Player.WALK;
-                player.ascendCounter = 1;
-                player.velY = Player.JUMP_SPEED;
-            }
-
             if (up.area.touching) {
                 player.velY = Player.CLIMB_SPEED_Y;
             }else if (down.area.touching){
                 player.velY = -Player.CLIMB_SPEED_Y;
             }else{
                 player.velY = 0;
+
+                if (jump.area.touching) {
+                    player.moveState = Player.WALK;
+                    player.ascendCounter = 0;
+                    player.velY = Player.JUMP_SPEED;
+                }
             }
         }else if (player.moveState.equals(Player.SWIM)) {
             if (left.area.touching) {
@@ -141,7 +150,7 @@ public class Platformer extends GameHandler {
                 player.inputAcc = 0;
             }
             if (jump.area.touching) {
-                if (player.ascendCounter == 1) return;
+                if (player.ascendCounter >= 1) return;
 
                 player.ascendCounter++;
 
@@ -167,7 +176,7 @@ public class Platformer extends GameHandler {
         }
 
         playerInteractCheck();
-        cam.tick();
+        cam.tick(false);
     }
     public void playerInteractCheck() {
         boolean canClimb = false;
@@ -190,9 +199,15 @@ public class Platformer extends GameHandler {
             final float indent = 0.5f;
             GameObject.Hitbox swimArea = new GameObject.Hitbox(water[0] + (1-indent),water[1] + (1-indent), water[2] - 2 + 2 * indent, water[3] - 2 + 2 * indent);
             if (player.getHitbox().full.intersect(swimArea.full)) {
+                if (player.moveState.equals(Player.WALK)) player.velY /= 4;
+
                 player.moveState = Player.SWIM;
             }else if (player.moveState.equals(Player.SWIM)){
                 player.moveState = Player.WALK;
+
+                if (jump.area.touching && player.velY > 0) {
+                    audioPlayer.play(FileLoader.Sound.JUMP);
+                }
             }
         }
 

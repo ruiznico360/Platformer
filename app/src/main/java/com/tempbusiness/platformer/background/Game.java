@@ -1,9 +1,9 @@
 package com.tempbusiness.platformer.background;
 
 import android.app.Activity;
+import android.media.AudioManager;
+import android.media.SoundPool;
 import android.os.Handler;
-import android.os.Parcelable;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.WindowManager;
 
@@ -22,6 +22,7 @@ public class Game extends Activity {
     public GameCanvas canvas;
     public GameHandler handler;
     public Handler ui;
+    public SoundPool soundPool;
     public Instance instance;
 
     @Override
@@ -36,13 +37,30 @@ public class Game extends Activity {
     }
     @Override
     protected void onPause() {
+        Util.log("onpause");
         super.onPause();
         gameLoop.stop();
+
+        for (AudioPlayer.MusicClip c : handler.audioPlayer.musicClips) {
+            Util.log("stopping music");
+            c.stop(true);
+        }
+
+        soundPool.release();
     }
     @Override
     protected void onResume() {
+        Util.log("onresume");
         super.onResume();
         gameLoop.start();
+
+        soundPool = new SoundPool(10,AudioManager.STREAM_MUSIC, 0);
+        soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+            @Override
+            public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                soundPool.play(sampleId,0.5f,0.5f,1,0,1);
+            }
+        });
     }
 
     @Override
@@ -53,9 +71,21 @@ public class Game extends Activity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-//        Util.log("saving... " + handler);
         instance.vars.set(0, handler);
         outState.putSerializable(ACCESS_KEY, instance);
+    }
+
+    public void setHandler(GameHandler newHandler) {
+        if (handler.audioPlayer != null && newHandler.audioPlayer != null) {
+            for (AudioPlayer.MusicClip c : handler.audioPlayer.musicClips) {
+                if (c.bound) {
+                    c.stop(false);
+                }else{
+                    newHandler.audioPlayer.musicClips.add(c);
+                }
+            }
+        }
+        handler = newHandler;
     }
 
     public void init(GameHandler prev) {
@@ -64,7 +94,7 @@ public class Game extends Activity {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         touchAdapter = new TouchAdapter(this);
-        handler = prev == null ? new MainMenu() : prev;
+        handler = prev == null ? new MainMenu(this) : prev;
         handler.game = this;
         ui = new Handler();
         gameLoop = new GameLoop(this);

@@ -10,6 +10,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 
 import com.tempbusiness.platformer.R;
+import com.tempbusiness.platformer.game.Platformer;
 import com.tempbusiness.platformer.util.ImageUtil;
 import com.tempbusiness.platformer.util.Util;
 

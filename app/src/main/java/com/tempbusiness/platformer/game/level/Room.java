@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.tempbusiness.platformer.game.Platformer;
 import com.tempbusiness.platformer.graphicobjects.Block;
 import com.tempbusiness.platformer.graphicobjects.Box;
+import com.tempbusiness.platformer.graphicobjects.Enemy;
 import com.tempbusiness.platformer.graphics.Display;
 
 public class Room {
@@ -18,6 +19,9 @@ public class Room {
         this.handler = handler;
     }
 
+    public void reset() {
+        handler.changeRoom(new Room(handler,id));
+    }
     public void setup() {
         if (id.equals(ID.L1_1)) {
             handler.addGraphic(new Box(0,0, Display.WIDTH, Display.HEIGHT, Color.CYAN));
@@ -26,7 +30,7 @@ public class Room {
             handler.addGraphic(CAM_MAX_X);
             handler.addGraphic(CAM_MAX_Y);
 
-            pStartX = 6;
+            pStartX = 17;
             pStartY = 7.4f;
 
             handler.addGraphic(new Block.Warpzone(1,1,handler, new Room(handler, ID.L1_2)));
@@ -45,6 +49,19 @@ public class Room {
             handler.addGraphic(new Block(7,5, Block.BRICK, handler));
             handler.addGraphic(new Block(9,5, Block.BRICK, handler));
             handler.addGraphic(new Block(17,5, Block.BRICK, handler));
+            handler.addGraphic(new Block(48,2, Block.BRICK, handler));
+
+            Enemy e = new Enemy(20,1,handler);
+            e.velX = -Enemy.RUN_VEL;
+            handler.addGraphic(e);
+
+            e = new Enemy(22,1,handler);
+            e.velX = -Enemy.RUN_VEL;
+            handler.addGraphic(e);
+
+            e = new Enemy(1,1,handler);
+            e.velX = Enemy.RUN_VEL;
+            handler.addGraphic(e);
         }else{
             handler.addGraphic(new Box(0,0, Display.WIDTH, Display.HEIGHT, Color.CYAN));
             CAM_MAX_X = new Block(Platformer.BLOCKS_PER_SCREEN - 1, -10, Block.GRASS, handler);
