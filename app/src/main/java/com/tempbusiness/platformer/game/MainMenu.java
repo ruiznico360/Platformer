@@ -27,6 +27,6 @@ public class MainMenu extends GameHandler {
             }
         };
         touchables.add(touch);
-        audioPlayer.playMusic(FileLoader.Sound.TITLE,0,true);
+//        audioPlayer.playMusic(FileLoader.Sound.TITLE,0,true);
     }
 }

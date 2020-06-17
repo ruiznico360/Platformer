@@ -1,4 +1,4 @@
-package com.tempbusiness.platformer.graphics;
+package com.tempbusiness.platformer.backup;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -8,8 +8,6 @@ import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
-
-import com.tempbusiness.platformer.util.ImageUtil;
 
 public class Transition {
     public static Bitmap CIRCLE_RESOURCE;
@@ -54,12 +52,12 @@ public class Transition {
         }
     }
     public void render(Canvas canvas) {
-        Rect dst = Display.rect(circleX - circleRadius, circleY - circleRadius, circleRadius * 2, circleRadius * 2);
+        Rect dst = ImageUtil.rect(circleX - circleRadius, circleY - circleRadius, circleRadius * 2, circleRadius * 2);
         Paint color = ImageUtil.color(Color.BLACK);
         canvas.drawRect(0,0,circleX - circleRadius + CIRCLE_BORDER, Display.HEIGHT, color);
-        canvas.drawRect((circleX + circleRadius) - CIRCLE_BORDER,0,Display.WIDTH, Display.HEIGHT, color);
-        canvas.drawRect(0,0,Display.WIDTH, circleY - circleRadius + CIRCLE_BORDER, color);
-        canvas.drawRect(0,(circleY + circleRadius) - CIRCLE_BORDER,Display.WIDTH, Display.HEIGHT, color);
+        canvas.drawRect((circleX + circleRadius) - CIRCLE_BORDER,0, Display.WIDTH, Display.HEIGHT, color);
+        canvas.drawRect(0,0, Display.WIDTH, circleY - circleRadius + CIRCLE_BORDER, color);
+        canvas.drawRect(0,(circleY + circleRadius) - CIRCLE_BORDER, Display.WIDTH, Display.HEIGHT, color);
         canvas.drawBitmap(CIRCLE_RESOURCE, null,dst,null);
     }
 }

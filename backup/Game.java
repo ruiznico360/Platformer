@@ -1,21 +1,11 @@
-package com.tempbusiness.platformer.background;
+package com.tempbusiness.platformer.backup;
 
 import android.app.Activity;
-import android.content.Context;
 import android.media.AudioManager;
 import android.media.SoundPool;
-import android.os.Handler;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.KeyEvent;
+import android.os.Handler;
 import android.view.WindowManager;
-
-import com.tempbusiness.platformer.game.MainMenu;
-import com.tempbusiness.platformer.game.Platformer;
-import com.tempbusiness.platformer.graphics.Display;
-import com.tempbusiness.platformer.graphics.GameCanvas;
-import com.tempbusiness.platformer.load.FileLoader;
-import com.tempbusiness.platformer.util.Util;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -28,19 +18,26 @@ public class Game extends Activity {
     public GameHandler handler;
     public Handler ui;
     public SoundPool soundPool;
+    public Instance instance;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        init();
+        if (savedInstanceState == null) {
+            init(null);
+        }else{
+            init((GameHandler)((Instance)savedInstanceState.getSerializable(ACCESS_KEY)).vars.get(0));
+        }
     }
     @Override
     protected void onPause() {
+        Util.log("onpause");
         super.onPause();
         gameLoop.stop();
 
         for (AudioPlayer.MusicClip c : handler.audioPlayer.musicClips) {
+            Util.log("stopping music");
             c.stop(true);
         }
 
@@ -48,6 +45,7 @@ public class Game extends Activity {
     }
     @Override
     protected void onResume() {
+        Util.log("onresume");
         super.onResume();
         gameLoop.start();
 
@@ -66,28 +64,10 @@ public class Game extends Activity {
     }
 
     @Override
-    public boolean dispatchKeyEvent(KeyEvent event) {
-        Touchable area = Platformer.jump.area;
-        if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            area = Platformer.left.area;
-        }else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            area = Platformer.right.area;
-        }
-        if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
-            area = Platformer.jump.area;
-        }else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
-            area = Platformer.down.area;
-        }
-
-        if (event.getAction() == KeyEvent.ACTION_DOWN) area.down();
-        else area.up();
-
-        return true;
-    }
-
-    @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        instance.vars.set(0, handler);
+        outState.putSerializable(ACCESS_KEY, instance);
     }
 
     public void setHandler(GameHandler newHandler) {
@@ -103,17 +83,24 @@ public class Game extends Activity {
         handler = newHandler;
     }
 
-    public void init() {
-        Display.initDimens(this);
-        FileLoader.setup(this);
+    public void init(GameHandler prev) {
+        Util.init(this);
+        FileLoader.setup();
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
-        handler = new MainMenu(this);
         touchAdapter = new TouchAdapter(this);
+        handler = prev == null ? new MainMenu(this) : prev;
         handler.game = this;
         ui = new Handler();
         gameLoop = new GameLoop(this);
         canvas = new GameCanvas(this);
         setContentView(canvas);
+
+        instance = new Instance();
+        instance.vars.add(handler);
+    }
+    public static class Instance implements Serializable {
+        public transient ArrayList<Object> vars = new ArrayList<>();
+
     }
 }

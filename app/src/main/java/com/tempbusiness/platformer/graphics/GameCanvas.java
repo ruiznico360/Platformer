@@ -1,11 +1,13 @@
 package com.tempbusiness.platformer.graphics;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.RectF;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
@@ -17,12 +19,15 @@ import com.tempbusiness.platformer.util.Util;
 import java.util.ArrayList;
 
 public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
-    public Game game;
-    public Transition currentTransition;
+    private Game game;
+    private Renderer renderer;
+    private Transition currentTransition;
 
     public GameCanvas(Game game) {
-        super(Util.appContext);
+        super(game);
         this.game = game;
+        this.renderer = new Renderer();
+
         getHolder().addCallback(this);
         setWillNotDraw(false);
 
@@ -31,21 +36,8 @@ public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void onDraw(Canvas canvas) {
-        game.handler.audioPlayer.tick();
-        if (currentTransition == null) {
-            game.gameLoop.tick();
-            handleGraphics(new Renderer(canvas));
-        } else {
-            currentTransition.tick();
-            handleGraphics(new Renderer(canvas));
-            currentTransition.render(canvas);
-
-            if (currentTransition.counter == currentTransition.duration) {
-                Runnable r = currentTransition.end;
-                currentTransition = null;
-                if (r != null) r.run();
-            }
-        }
+        game.gameLoop.tick();
+        handleGraphics(canvas);
     }
 
     @Override
@@ -53,8 +45,9 @@ public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
         game.touchAdapter.handleTouchInput(event);
         return true;
     }
-    private synchronized void handleGraphics(Renderer canvas) {
-        game.handler.render(canvas);
+    private synchronized void handleGraphics(Canvas canvas) {
+        renderer.setCanvas(canvas);
+        game.handler.render(renderer);
     }
     public void surfaceDestroyed(SurfaceHolder holder) {}
     public void surfaceChanged(SurfaceHolder holder,int a,int b, int c) {}

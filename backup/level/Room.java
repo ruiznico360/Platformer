@@ -1,11 +1,12 @@
-package com.tempbusiness.platformer.game.level;
+package com.tempbusiness.platformer.backup.level;
 
 import android.graphics.Color;
 
-import com.tempbusiness.platformer.game.Platformer;
-import com.tempbusiness.platformer.graphicobjects.gameobject.Block;
-import com.tempbusiness.platformer.graphicobjects.Box;
-import com.tempbusiness.platformer.graphics.Display;
+import com.tempbusiness.platformer.backup.Block;
+import com.tempbusiness.platformer.backup.Box;
+import com.tempbusiness.platformer.backup.Display;
+import com.tempbusiness.platformer.backup.Enemy;
+import com.tempbusiness.platformer.backup.Platformer;
 
 public class Room {
     public float pStartX, pStartY;
@@ -24,8 +25,8 @@ public class Room {
     public void setup() {
         if (id.equals(ID.L1_1)) {
             handler.addGraphic(new Box(0,0, Display.WIDTH, Display.HEIGHT, Color.CYAN));
-            CAM_MAX_X = new Block(50, -10, Block.BRICK, handler);
-            CAM_MAX_Y = new Block(-10, Platformer.BLOCKS_PER_Y + 16, Block.BRICK, handler);
+            CAM_MAX_X = new Block(50-1, -10, Block.BRICK, handler);
+            CAM_MAX_Y = new Block(-10, 10, Block.BRICK, handler);
             handler.addGraphic(CAM_MAX_X);
             handler.addGraphic(CAM_MAX_Y);
 
@@ -35,12 +36,11 @@ public class Room {
             handler.addGraphic(new Block.Warpzone(1,1,handler, new Room(handler, ID.L1_2)));
             handler.addGraphic(new Block.Warpzone(1,2,handler, null));
 
-            for (int i = 0; i < 48; i++) {
-                handler.addGraphic(new Block(i,0, Block.BRICK, handler));
-                handler.addGraphic(new Block(i,Platformer.BLOCKS_PER_Y - 1, Block.BRICK, handler));
-                handler.addGraphic(new Block(i,Platformer.BLOCKS_PER_Y + 15, Block.BRICK, handler));
+            for (int i = 0; i < 50; i++) {
+                handler.addGraphic(new Block(i,0, Block.GRASS, handler));
+                handler.addGraphic(new Block(i,10, Block.BRICK, handler));
             }
-            for (int i = 1; i < Platformer.BLOCKS_PER_Y + 16; i++) {
+            for (int i = 1; i < 10; i++) {
                 handler.addGraphic(new Block(0,i, Block.BRICK, handler));
                 handler.addGraphic(new Block(50 - 1,i, Block.BRICK, handler));
             }
@@ -50,9 +50,21 @@ public class Room {
             handler.addGraphic(new Block(9,5, Block.BRICK, handler));
             handler.addGraphic(new Block(17,5, Block.BRICK, handler));
             handler.addGraphic(new Block(48,2, Block.BRICK, handler));
+
+            Enemy e = new Enemy(20,1,handler);
+            e.velX = -Enemy.RUN_VEL;
+            handler.addGraphic(e);
+
+            e = new Enemy(22,1,handler);
+            e.velX = -Enemy.RUN_VEL;
+            handler.addGraphic(e);
+
+            e = new Enemy(1,1,handler);
+            e.velX = Enemy.RUN_VEL;
+            handler.addGraphic(e);
         }else{
             handler.addGraphic(new Box(0,0, Display.WIDTH, Display.HEIGHT, Color.CYAN));
-            CAM_MAX_X = new Block(Platformer.BLOCKS_PER_X - 1, -10, Block.GRASS, handler);
+            CAM_MAX_X = new Block(Platformer.BLOCKS_PER_SCREEN - 1, -10, Block.GRASS, handler);
             CAM_MAX_Y = new Block(-10, 30-1, Block.BRICK, handler);
             handler.addGraphic(CAM_MAX_X);
             handler.addGraphic(CAM_MAX_Y);
@@ -63,13 +75,13 @@ public class Room {
             handler.addGraphic(new Block.Warpzone(1,1,handler, new Room(handler, ID.L1_1)));
             handler.addGraphic(new Block.Warpzone(1,2,handler, null));
 
-            for (int i = 0; i < Platformer.BLOCKS_PER_X; i++) {
+            for (int i = 0; i < Platformer.BLOCKS_PER_SCREEN; i++) {
                 handler.addGraphic(new Block(i,0, Block.GRASS, handler));
                 handler.addGraphic(new Block(i, 30-1, Block.BRICK, handler));
             }
             for (int i = 1; i < 30; i++) {
                 handler.addGraphic(new Block(0,i, Block.BRICK, handler));
-                handler.addGraphic(new Block(Platformer.BLOCKS_PER_X  - 1,i, Block.BRICK, handler));
+                handler.addGraphic(new Block(Platformer.BLOCKS_PER_SCREEN  - 1,i, Block.BRICK, handler));
             }
 
             handler.addGraphic(new Block(5,5, Block.BRICK, handler));

@@ -1,9 +1,7 @@
-package com.tempbusiness.platformer.background;
+package com.tempbusiness.platformer.backup;
 
 import android.graphics.Rect;
 import android.view.MotionEvent;
-
-import com.tempbusiness.platformer.graphics.Display;
 
 import java.util.HashMap;
 
@@ -43,7 +41,7 @@ public class TouchAdapter {
     public void handleDown() {
         for (int i = 0; i < game.handler.touchables.size(); i++) {
             boolean interesct = false;
-            Rect touchableBounds = Display.rect(game.handler.touchables.get(i).x, game.handler.touchables.get(i).y, game.handler.touchables.get(i).w, game.handler.touchables.get(i).h);
+            Rect touchableBounds = ImageUtil.rect(game.handler.touchables.get(i).x, game.handler.touchables.get(i).y, game.handler.touchables.get(i).w, game.handler.touchables.get(i).h);
 
             for (Coords c : activePointers.values()) {
                 if (touchableBounds.contains((int)c.x, (int)c.y)) {
@@ -63,7 +61,7 @@ public class TouchAdapter {
         
         for (int i = 0; i < game.handler.touchables.size(); i++) {
             boolean interesct = false;
-            Rect touchableBounds = Display.rect(game.handler.touchables.get(i).x, game.handler.touchables.get(i).y, game.handler.touchables.get(i).w, game.handler.touchables.get(i).h);
+            Rect touchableBounds = ImageUtil.rect(game.handler.touchables.get(i).x, game.handler.touchables.get(i).y, game.handler.touchables.get(i).w, game.handler.touchables.get(i).h);
 
             for (Coords c : activePointers.values()) {
                 if (touchableBounds.contains((int)c.x, (int)c.y)) {

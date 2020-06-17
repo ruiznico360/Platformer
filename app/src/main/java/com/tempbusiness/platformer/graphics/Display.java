@@ -1,44 +1,57 @@
 package com.tempbusiness.platformer.graphics;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.util.DisplayMetrics;
 
+import com.tempbusiness.platformer.background.GameHandler;
 import com.tempbusiness.platformer.game.Platformer;
 import com.tempbusiness.platformer.util.Util;
 
 public class Display {
-    public static int WIDTH, HEIGHT, BLOCK_SIZE, OFFSET_SCREEN_X;
+    public static int WIDTH, HEIGHT, BLOCK_SIZE, OFFSET_SCREEN_X, OFFSET_SCREEN_Y, G_WIDTH, G_HEIGHT;
 
 
-    public static float displayY(float y) {
-        return HEIGHT - (y * BLOCK_SIZE);
+    public static void initDimens(Context c) {
+        DisplayMetrics metrics = c.getResources().getDisplayMetrics();
+        Display.WIDTH = metrics.widthPixels;
+        Display.HEIGHT = metrics.heightPixels;
+
+        float dW = Display.WIDTH;
+        float dH = Display.HEIGHT;
+        float blockX = Platformer.BLOCKS_PER_X;
+        float blockY = Platformer.BLOCKS_PER_Y;
+
+        if (dW / dH < blockX / blockY) {
+            Display.BLOCK_SIZE = (int)(dW / blockX);
+        }else{
+            Display.BLOCK_SIZE = (int)(dH / blockY);
+        }
+
+        G_WIDTH = (int) blockX * Display.BLOCK_SIZE;
+        G_HEIGHT = (int) blockY * Display.BLOCK_SIZE;
+        Display.OFFSET_SCREEN_X = (int)((dW - G_WIDTH) / 2f);
+        Display.OFFSET_SCREEN_Y = (int)((dH - G_HEIGHT) / 2f);
+
     }
 
-    public static float displayX(float x) {
-        return x * BLOCK_SIZE;
-    }
-
-    public static float displaySize(float size) {
-        return size * BLOCK_SIZE;
-    }
-
-    public static Rect genRect(float x, float y, float w, float h) {
+    public static Rect rect(float x, float y, float w, float h) {
         Rect r = new Rect();
-
-        r.left = (int) displayX(x);
-        r.top = (int) displayY(y + h);
-        r.right = (int) displayX((x + w));
-        r.bottom = (int) displayY((y));
+        r.left = (int) x;
+        r.top = (int) y;
+        r.right = (int) (x + w);
+        r.bottom = (int) (y + h);
         return r;
     }
-    public static RectF genRectF(float x, float y, float w, float h) {
-        RectF r = new RectF();
 
-        r.left = displayX(x);
-        r.top = displayY(y + h);
-        r.right = displayX((x + w));
-        r.bottom = displayY((y));
+    public static RectF rectF(float x, float y, float w, float h) {
+        RectF r = new RectF();
+        r.left = (int) x;
+        r.top = (int) y;
+        r.right = (int) (x + w);
+        r.bottom = (int) (y + h);
         return r;
     }
 }

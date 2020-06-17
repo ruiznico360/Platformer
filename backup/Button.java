@@ -1,21 +1,12 @@
-package com.tempbusiness.platformer.graphicobjects;
+package com.tempbusiness.platformer.backup;
 
 import android.graphics.Color;
 
-import com.tempbusiness.platformer.background.GameHandler;
-import com.tempbusiness.platformer.background.Touchable;
-import com.tempbusiness.platformer.graphics.Display;
-import com.tempbusiness.platformer.graphics.Renderer;
-import com.tempbusiness.platformer.load.FileLoader;
-
-public class Button extends Box{
+public class Button extends Box {
     public Touchable area;
     public boolean visible = true;
     public GameHandler handler;
 
-    public boolean touching() {
-        return area.touching;
-    }
     public Button(int color, GameHandler handler, Touchable custom) {
         super(custom.x,custom.y,custom.w,custom.h,color);
         this.area = custom;
@@ -23,7 +14,7 @@ public class Button extends Box{
 
         handler.touchables.add(area);
     }
-    public Button(FileLoader.Image img,  GameHandler handler, Touchable custom) {
+    public Button(FileLoader.Image img, GameHandler handler, Touchable custom) {
         super(custom.x,custom.y,custom.w,custom.h,img);
         this.area = custom;
         this.handler = handler;
@@ -36,7 +27,7 @@ public class Button extends Box{
             super.render(canvas);
 
             if (area.touching) {
-                canvas.drawRect(Display.rect(area.x, area.y, area.w, area.h), Color.argb(100, 0, 0, 0));
+                canvas.drawRect(ImageUtil.rect(area.x, area.y, area.w, area.h), Color.argb(100, 0, 0, 0));
             }
         }
     }

@@ -1,10 +1,6 @@
-package com.tempbusiness.platformer.background;
+package com.tempbusiness.platformer.backup;
 
-import android.content.Context;
 import android.media.MediaPlayer;
-
-import com.tempbusiness.platformer.load.FileLoader;
-import com.tempbusiness.platformer.util.Util;
 
 import java.util.ArrayList;
 
@@ -20,12 +16,13 @@ public class AudioPlayer {
         MusicClip[] clipArray = new MusicClip[musicClips.size()];
         musicClips.toArray(clipArray);
         for (MusicClip a : clipArray) {
+            Util.log(game.game.gameLoop.running + " attempting to tick");
             if (game.game.gameLoop.running) a.tick();
         }
     }
 
-    public void play(FileLoader.Sound id, Context c) {
-        game.game.soundPool.load(c, id.name, 1);
+    public void play(FileLoader.Sound id) {
+        game.game.soundPool.load(Util.appContext, id.name, 1);
     }
     public void playMusic(FileLoader.Sound id) {
         musicClips.add(new MusicClip(id));
@@ -48,8 +45,9 @@ public class AudioPlayer {
             this.timePassed = timePassed;
             this.bound = bound;
         }
-        public void start(Context c) {
-            player = MediaPlayer.create(c, id.name);
+        public void start() {
+            Util.log("starting music");
+            player = MediaPlayer.create(Util.appContext, id.name);
             player.setVolume(volume, volume);
             player.seekTo(timePassed);
             player.start();
@@ -62,7 +60,7 @@ public class AudioPlayer {
         }
         public void tick() {
             if (!playing) {
-//                start();
+                start();
             }
             timePassed = player.getCurrentPosition();
 

@@ -1,15 +1,11 @@
-package com.tempbusiness.platformer.background;
-
-import android.os.Handler;
-import android.os.SystemClock;
-
-import com.tempbusiness.platformer.util.Util;
+package com.tempbusiness.platformer.backup;
 
 public class GameLoop implements Runnable {
     public boolean running = false;
     public Game game;
-    public static final int FRAMES_PER_SECOND = 60;
+    public static final int FRAMES_PER_SECOND = 60 ;
     private Thread thread;
+    public Runnable stop;
 
     public GameLoop(Game game) {
         this.game = game;

@@ -1,9 +1,7 @@
-package com.tempbusiness.platformer.graphicobjects;
+package com.tempbusiness.platformer.backup;
 
 import android.graphics.Rect;
 
-import com.tempbusiness.platformer.graphics.Display;
-import com.tempbusiness.platformer.graphics.Renderer;
 import com.tempbusiness.platformer.load.FileLoader.Image;
 
 public class Box extends Graphic {
@@ -16,7 +14,7 @@ public class Box extends Graphic {
     }
 
     public void render(Renderer canvas) {
-        Rect dst = Display.rect(x,y,w,h);
+        Rect dst = ImageUtil.rect(x,y,w,h);
         if (img == null) {
             canvas.drawRect(dst, color);
         }else{
