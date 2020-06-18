@@ -23,7 +23,7 @@ public class FileLoader {
         }
     }
     public enum Image {
-        BLOCK("block",1), GRASS1("grass1",1),GRASS2("grass2",1),GRASS3("grass3",1);
+        BLOCK("block",1), GRASS1("grass1",1),GRASS2("grass2",1),GRASS3("grass3",1), PLAYER("player", 1);
 
         public String name;
         public Bitmap img;

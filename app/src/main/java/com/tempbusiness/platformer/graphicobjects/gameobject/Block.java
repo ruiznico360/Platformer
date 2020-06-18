@@ -8,6 +8,7 @@ import com.tempbusiness.platformer.game.Platformer;
 import com.tempbusiness.platformer.game.level.Room;
 import com.tempbusiness.platformer.graphicobjects.gameobject.GameObject;
 import com.tempbusiness.platformer.graphics.Display;
+import com.tempbusiness.platformer.graphics.Renderer;
 import com.tempbusiness.platformer.load.FileLoader.Image;
 import com.tempbusiness.platformer.util.Util;
 

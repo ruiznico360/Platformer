@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.tempbusiness.platformer.background.AudioPlayer;
 import com.tempbusiness.platformer.background.Game;
 import com.tempbusiness.platformer.background.GameHandler;
+import com.tempbusiness.platformer.background.GameLoop;
 import com.tempbusiness.platformer.background.Touchable;
 import com.tempbusiness.platformer.game.level.Camera;
 import com.tempbusiness.platformer.game.level.Room;
@@ -30,7 +31,7 @@ public class Platformer extends GameHandler {
     public Platformer(Game gameInstance) {
         this.audioPlayer = new AudioPlayer(this);
         this.game = gameInstance;
-        this.cam = new Camera(this);
+        this.cam = new Camera(this, BUTTON_SIZE);
 
        changeRoom(new Room(this, Room.ID.L1_1));
 //       audioPlayer.playMusic(FileLoader.Sound.OVERWORLD);
@@ -45,7 +46,7 @@ public class Platformer extends GameHandler {
 
         player = new Player(currentRoom.pStartX, currentRoom.pStartY,this);
         graphics.add(player);
-        cam.tick(true);
+        cam.tick();
 
         setupControls();
     }
@@ -106,7 +107,7 @@ public class Platformer extends GameHandler {
             graphics.get(i).tick();
         }
 
-        cam.tick(false);
+        cam.tick();
     }
 
     public void render(Renderer canvas) {

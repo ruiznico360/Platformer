@@ -1,83 +1,108 @@
 package com.tempbusiness.platformer.game.level;
 
 import com.tempbusiness.platformer.game.Platformer;
+import com.tempbusiness.platformer.graphicobjects.gameobject.Block;
+import com.tempbusiness.platformer.graphicobjects.gameobject.Player;
 import com.tempbusiness.platformer.graphics.Display;
 import com.tempbusiness.platformer.graphics.Renderer;
-import com.tempbusiness.platformer.util.Util;
 
 public class Camera {
-    public static float IDEAL_X_RIGHT, IDEAL_X_LEFT, IDEAL_Y_UP, IDEAL_Y_DOWN, X_SPEED, Y_SPEED;
-    public Platformer handler;
-    public float x,y, screen_x, screen_y, x_bound, y_bound;
+    private final float Y_MAX_OFFSET, BOTTOM, X_MAX_OFFSET, BASE_SPEED, CENTER_X, CENTER_Y, LEVEL_SPEED;
+    private Platformer handler;
+    private int controlS;
+    private float x,y, y_offset, x_offset;
 
-    public Camera(Platformer handler) {
+    public Camera(Platformer handler, int controlS) {
         this.handler = handler;
-        IDEAL_X_RIGHT = Display.WIDTH / 2f - Display.BLOCK_SIZE * 2;
-        IDEAL_X_LEFT = Display.WIDTH / 2f + Display.BLOCK_SIZE;
-        IDEAL_Y_UP = Display.HEIGHT / 2f - Display.BLOCK_SIZE * 2;
-        IDEAL_Y_DOWN = Display.HEIGHT / 2f + Display.BLOCK_SIZE;
-        X_SPEED = Display.WIDTH / 400f;
-        Y_SPEED = X_SPEED;
-        screen_x = Display.WIDTH / 2;
-        screen_y = Display.HEIGHT / 2;
-        x_bound = Display.OFFSET_SCREEN_X + Display.G_WIDTH;
-        y_bound = Display.OFFSET_SCREEN_Y;
-
+        X_MAX_OFFSET = Display.G_WIDTH * 0.2f;
+        Y_MAX_OFFSET = Display.G_HEIGHT * 0.1f;
+        BASE_SPEED = Display.G_WIDTH / 200f;
+        LEVEL_SPEED = BASE_SPEED * 2;
+        CENTER_X = Display.G_WIDTH / 2;
+        CENTER_Y = Display.G_HEIGHT / 2;
+        x_offset = CENTER_X;
+        y_offset = CENTER_Y;
+        BOTTOM = (controlS + Display.BLOCK_SIZE);
     }
 
-    public void tick(boolean force) {
+    public float x() {
+        return x;
+    }
+    public float y() {
+        return y;
+    }
+    public void tick() {
+        handleX();
+        handleY();
+
+    }
+    private void handleY() {
+        if (handler.currentRoom.CAM_Y_BOUNDS.size() == 1) {
+            handleUnboundedY();
+        }else{
+            handleLevelY();
+        }
+    }
+
+    private void handleUnboundedY() {
         Room r = handler.currentRoom;
-        float max_x = x_bound - Renderer.preCamDisplayX(r.CAM_MAX_X.x);
-        float max_y = y_bound - Renderer.preCamDisplayY(r.CAM_MAX_Y.y);
-        float min_x = 0;
-        float min_y = 0;
-        float ideal_x = screen_x - Renderer.preCamDisplayX(handler.player.x);
-        float ideal_y = screen_y - Renderer.preCamDisplayY(handler.player.y);
+        float max_y = Renderer.preCamDisplayY(r.CAM_Y_BOUNDS.get(0).y);
+        float py = Renderer.preCamDisplayY(handler.player.y);
+        float ideal_y = - py;
 
-        x = Math.min(Math.max(max_x,ideal_x), 0);
-        y = Math.min(max_y,Math.max(ideal_y, 0));
+        if (handler.player.velY != 0) {
+            y_offset = handler.player.velY < 0 ? Math.max(y_offset - BASE_SPEED, CENTER_Y - Y_MAX_OFFSET) : Math.min(y_offset + BASE_SPEED, CENTER_Y + Y_MAX_OFFSET);
+        }
 
-        //        if (handler.player.velX != 0 || force) {
-//            float player_pixel_x = handler.player.getHitbox().l.left;
-//            float screenPosX = x + Display.OFFSET_SCREEN_X + player_pixel_x;
-//            screen_x = handler.player.velX > 0 ? Math.max(screen_x - X_SPEED, IDEAL_X_RIGHT) : Math.min(screen_x + X_SPEED, IDEAL_X_LEFT);
-//            float newX = screen_x - player_pixel_x;
-//
-//            if (newX > 0) {
-//                newX = 0;
-//                screen_x = Math.max(screenPosX, IDEAL_X_RIGHT);
-//            }else if (newX + Display.OFFSET_SCREEN_X + (handler.currentRoom.CAM_MAX_X.getHitbox().r.right) < Display.WIDTH) {
-//                newX = Math.min(0, Display.WIDTH - Display.OFFSET_SCREEN_X - (handler.currentRoom.CAM_MAX_X.getHitbox().r.right));
-//                screen_x = Math.min(screenPosX, IDEAL_X_LEFT);
-//            }
-//
-//            x = newX;
-//        }
-//        if (handler.player.velY != 0 || force) {
-//            float player_pixel_y = handler.player.getHitbox().t.top;
-//            float newY;
-//
-//            if (handler.player.velY > 0) {
-//                if (IDEAL_Y_UP > y + player_pixel_y) {
-//                    newY = IDEAL_Y_UP - player_pixel_y;
-//                }else{
-//                    newY = y;
-//                }
-//            }else{
-//                if (IDEAL_Y_DOWN < y + player_pixel_y) {
-//                    newY = IDEAL_Y_DOWN - player_pixel_y;
-//                }else{
-//                    newY = y;
-//                }
-//            }
-//            if (newY < 0) {
-//                newY = 0;
-//            }else if (newY + (handler.currentRoom.CAM_MAX_Y.getHitbox().t.top) > 0) {
-//                newY = Math.max(0, (-handler.currentRoom.CAM_MAX_Y.getHitbox().t.top));
-//            }
-//
-//            y = newY;
-//        }
+        ideal_y += y_offset;
 
+        if (ideal_y > BOTTOM) {
+            y_offset = Math.max(y + py, CENTER_Y - Y_MAX_OFFSET);
+            ideal_y = BOTTOM;
+        }else if (ideal_y + max_y < Display.G_HEIGHT) {
+            y_offset = Math.min(y + py, CENTER_Y + Y_MAX_OFFSET);
+            ideal_y = Math.min(0, Display.G_HEIGHT - max_y);
+        }
+
+        y = ideal_y;
+    }
+
+    private void handleLevelY() {
+        Room r = handler.currentRoom;
+        Player p = handler.player;
+
+        float scrollTo = BOTTOM;
+        for (Block b : r.CAM_Y_BOUNDS) {
+            if (p.y < b.y) break;
+            scrollTo = BOTTOM - Renderer.preCamDisplayY(b.y);
+        }
+
+        if (y != scrollTo) {
+            y = y > scrollTo ? Math.max(y - LEVEL_SPEED, scrollTo) : Math.min(y + LEVEL_SPEED, scrollTo);
+        }
+
+    }
+    private void handleX() {
+        Room r = handler.currentRoom;
+        float max_x = Renderer.preCamDisplayX(r.CAM_MAX_X.x);
+
+        float px = Renderer.preCamDisplayX(handler.player.x);
+        float ideal_x = - px;
+
+        if (handler.player.velX != 0) {
+            x_offset = handler.player.velX > 0 ? Math.max(x_offset - BASE_SPEED, CENTER_X - X_MAX_OFFSET) : Math.min(x_offset + BASE_SPEED, CENTER_X + X_MAX_OFFSET);
+        }
+
+        ideal_x += x_offset;
+
+        if (ideal_x > 0) {
+            x_offset = Math.max(x + px, CENTER_X - X_MAX_OFFSET);
+            ideal_x = 0;
+        }else if (ideal_x + max_x < Display.G_WIDTH) {
+            x_offset = Math.min(x + px, CENTER_X + X_MAX_OFFSET);
+            ideal_x = Math.min(0, Display.G_WIDTH - max_x);
+        }
+
+        x = ideal_x;
     }
 }

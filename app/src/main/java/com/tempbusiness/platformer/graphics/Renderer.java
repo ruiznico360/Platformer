@@ -44,22 +44,23 @@ public class Renderer {
 
     public void drawGBitmap(Platformer handler, float x, float y, float w, float h, FileLoader.Image img) {
         Rect r = new Rect(displayX(x, handler), displayY(y + h, handler), displayX(x + w, handler), displayY(y, handler));
+
         drawBitmap(r,img);
     }
 
-    public static int preCamDisplayY(float y) {
-        return Display.HEIGHT - (int)((y * Display.BLOCK_SIZE) + Display.OFFSET_SCREEN_Y);
+    public static float preCamDisplayY(float y) {
+        return (y * Display.BLOCK_SIZE);
     }
     public static int displayY(float y, Platformer handler) {
-        return preCamDisplayY(y) + (int) handler.cam.y;
+        return (int)(Display.HEIGHT - (preCamDisplayY(y) + handler.cam.y() + Display.OFFSET_SCREEN_Y));
     }
 
-    public static int preCamDisplayX(float x) {
-        return (int)((x * Display.BLOCK_SIZE) + Display.OFFSET_SCREEN_X);
+    public static float preCamDisplayX(float x) {
+        return ((x * Display.BLOCK_SIZE));
     }
 
     public static int displayX(float x, Platformer handler) {
-        return preCamDisplayX(x) + (int) handler.cam.x;
+        return (int)(preCamDisplayX(x) + handler.cam.x() + Display.OFFSET_SCREEN_X);
     }
 
 }
