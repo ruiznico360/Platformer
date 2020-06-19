@@ -1,10 +1,7 @@
-package com.tempbusiness.platformer.graphicobjects.gameobject;
+package com.tempbusiness.platformer.game.gameobject;
 
-import com.tempbusiness.platformer.game.Platformer;
-import com.tempbusiness.platformer.load.FileLoader;
-import com.tempbusiness.platformer.util.Util;
-
-import java.util.ArrayList;
+import com.tempbusiness.platformer.game.handler.Platformer;
+import com.tempbusiness.platformer.fileio.FileLoader;
 
 public abstract class Entity extends GameObject{
     public static final float TERM_VEL = -2;

@@ -1,10 +1,9 @@
-package com.tempbusiness.platformer.graphicobjects;
+package com.tempbusiness.platformer.game.graphics;
 
 import android.graphics.Rect;
 
-import com.tempbusiness.platformer.graphics.Display;
-import com.tempbusiness.platformer.graphics.Renderer;
-import com.tempbusiness.platformer.load.FileLoader.Image;
+import com.tempbusiness.platformer.game.graphics.rendering.Renderer;
+import com.tempbusiness.platformer.fileio.FileLoader.Image;
 
 public class Box extends Graphic {
 

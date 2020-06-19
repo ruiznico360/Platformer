@@ -1,13 +1,7 @@
 package com.tempbusiness.platformer.util;
 
-import android.app.Activity;
-import android.content.Context;
 import android.graphics.Color;
-import android.util.DisplayMetrics;
 import android.util.Log;
-
-import com.tempbusiness.platformer.game.Platformer;
-import com.tempbusiness.platformer.graphics.Display;
 
 import java.util.Random;
 

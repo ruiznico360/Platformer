@@ -2,7 +2,7 @@ package com.tempbusiness.platformer.backup;
 
 import android.graphics.Rect;
 
-import com.tempbusiness.platformer.load.FileLoader.Image;
+import com.tempbusiness.platformer.fileio.FileLoader.Image;
 
 public class Box extends Graphic {
 

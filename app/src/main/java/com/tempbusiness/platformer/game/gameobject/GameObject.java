@@ -1,17 +1,9 @@
-package com.tempbusiness.platformer.graphicobjects.gameobject;
+package com.tempbusiness.platformer.game.gameobject;
 
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Rect;
-import android.graphics.RectF;
-
-import com.tempbusiness.platformer.game.Platformer;
-import com.tempbusiness.platformer.graphicobjects.Box;
-import com.tempbusiness.platformer.graphics.Display;
-import com.tempbusiness.platformer.graphics.Renderer;
-import com.tempbusiness.platformer.load.FileLoader.Image;
-import com.tempbusiness.platformer.util.ImageUtil;
+import com.tempbusiness.platformer.game.handler.Platformer;
+import com.tempbusiness.platformer.game.graphics.Box;
+import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
+import com.tempbusiness.platformer.fileio.FileLoader.Image;
 
 public class GameObject extends Box {
     public Platformer handler;
@@ -24,12 +16,16 @@ public class GameObject extends Box {
         this.handler = handler;
     }
 
-    public void render(Renderer canvas) {
+    public void gRender(GRenderer canvas) {
         if (img == null) {
             canvas.drawGRect(handler, x,y,w,h, color);
         }else{
             canvas.drawGBitmap(handler, x,y,w,h, img);
         }
+    }
+
+    public void tick() {
+
     }
 
     public Hitbox getHitbox() {

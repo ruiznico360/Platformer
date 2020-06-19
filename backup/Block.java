@@ -3,7 +3,7 @@ package com.tempbusiness.platformer.backup;
 import android.graphics.Color;
 
 import com.tempbusiness.platformer.backup.level.Room;
-import com.tempbusiness.platformer.load.FileLoader.Image;
+import com.tempbusiness.platformer.fileio.FileLoader.Image;
 
 import java.util.Random;
 

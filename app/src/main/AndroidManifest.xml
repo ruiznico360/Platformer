@@ -10,7 +10,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".background.Game"
+            android:name=".android.MainActivity"
             android:theme="@style/AppTheme.NoActionBar"
             android:screenOrientation="sensorLandscape">
 

@@ -1,6 +1,4 @@
-package com.tempbusiness.platformer.background;
-
-import android.text.method.Touch;
+package com.tempbusiness.platformer.game.controls;
 
 public abstract class Touchable {
     public float x,y,w,h;

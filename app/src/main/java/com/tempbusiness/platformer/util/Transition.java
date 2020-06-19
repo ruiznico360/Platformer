@@ -1,4 +1,4 @@
-package com.tempbusiness.platformer.graphics;
+package com.tempbusiness.platformer.util;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -9,7 +9,8 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
-import com.tempbusiness.platformer.util.ImageUtil;
+import com.tempbusiness.platformer.game.graphics.Display;
+import com.tempbusiness.platformer.game.graphics.rendering.Renderer;
 
 public class Transition {
     public static Bitmap CIRCLE_RESOURCE;
@@ -55,7 +56,7 @@ public class Transition {
     }
     public void render(Canvas canvas) {
         Rect dst = Display.rect(circleX - circleRadius, circleY - circleRadius, circleRadius * 2, circleRadius * 2);
-        Paint color = ImageUtil.color(Color.BLACK);
+        Paint color = Renderer.paint(Color.BLACK);
         canvas.drawRect(0,0,circleX - circleRadius + CIRCLE_BORDER, Display.HEIGHT, color);
         canvas.drawRect((circleX + circleRadius) - CIRCLE_BORDER,0,Display.WIDTH, Display.HEIGHT, color);
         canvas.drawRect(0,0,Display.WIDTH, circleY - circleRadius + CIRCLE_BORDER, color);

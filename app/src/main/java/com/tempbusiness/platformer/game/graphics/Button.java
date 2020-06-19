@@ -1,12 +1,11 @@
-package com.tempbusiness.platformer.graphicobjects;
+package com.tempbusiness.platformer.game.graphics;
 
 import android.graphics.Color;
 
-import com.tempbusiness.platformer.background.GameHandler;
-import com.tempbusiness.platformer.background.Touchable;
-import com.tempbusiness.platformer.graphics.Display;
-import com.tempbusiness.platformer.graphics.Renderer;
-import com.tempbusiness.platformer.load.FileLoader;
+import com.tempbusiness.platformer.game.handler.GameHandler;
+import com.tempbusiness.platformer.game.controls.Touchable;
+import com.tempbusiness.platformer.game.graphics.rendering.Renderer;
+import com.tempbusiness.platformer.fileio.FileLoader;
 
 public class Button extends Box{
     public Touchable area;
@@ -31,6 +30,7 @@ public class Button extends Box{
         handler.touchables.add(area);
 
     }
+
     public void render(Renderer canvas) {
         if (visible) {
             super.render(canvas);

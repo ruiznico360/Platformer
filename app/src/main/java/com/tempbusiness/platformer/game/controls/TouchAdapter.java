@@ -1,9 +1,10 @@
-package com.tempbusiness.platformer.background;
+package com.tempbusiness.platformer.game.controls;
 
 import android.graphics.Rect;
 import android.view.MotionEvent;
 
-import com.tempbusiness.platformer.graphics.Display;
+import com.tempbusiness.platformer.game.Game;
+import com.tempbusiness.platformer.game.graphics.Display;
 
 import java.util.HashMap;
 
@@ -41,9 +42,9 @@ public class TouchAdapter {
         }
     }
     public void handleDown() {
-        for (int i = 0; i < game.handler.touchables.size(); i++) {
+        for (int i = 0; i < game.getHandler().touchables.size(); i++) {
             boolean interesct = false;
-            Rect touchableBounds = Display.rect(game.handler.touchables.get(i).x, game.handler.touchables.get(i).y, game.handler.touchables.get(i).w, game.handler.touchables.get(i).h);
+            Rect touchableBounds = Display.rect(game.getHandler().touchables.get(i).x, game.getHandler().touchables.get(i).y, game.getHandler().touchables.get(i).w, game.getHandler().touchables.get(i).h);
 
             for (Coords c : activePointers.values()) {
                 if (touchableBounds.contains((int)c.x, (int)c.y)) {
@@ -51,19 +52,19 @@ public class TouchAdapter {
                 }
             }
 
-            if (!game.handler.touchables.get(i).touching && interesct) {
-                game.handler.touchables.get(i).down();
-            }else if (game.handler.touchables.get(i).touching && !interesct) {
-                game.handler.touchables.get(i).up();
+            if (!game.getHandler().touchables.get(i).touching && interesct) {
+                game.getHandler().touchables.get(i).down();
+            }else if (game.getHandler().touchables.get(i).touching && !interesct) {
+                game.getHandler().touchables.get(i).up();
             }
         }
     }
     public void handleUp(int pointerId) {
         activePointers.remove(pointerId);
         
-        for (int i = 0; i < game.handler.touchables.size(); i++) {
+        for (int i = 0; i < game.getHandler().touchables.size(); i++) {
             boolean interesct = false;
-            Rect touchableBounds = Display.rect(game.handler.touchables.get(i).x, game.handler.touchables.get(i).y, game.handler.touchables.get(i).w, game.handler.touchables.get(i).h);
+            Rect touchableBounds = Display.rect(game.getHandler().touchables.get(i).x, game.getHandler().touchables.get(i).y, game.getHandler().touchables.get(i).w, game.getHandler().touchables.get(i).h);
 
             for (Coords c : activePointers.values()) {
                 if (touchableBounds.contains((int)c.x, (int)c.y)) {
@@ -71,8 +72,8 @@ public class TouchAdapter {
                 }
             }
 
-            if (game.handler.touchables.get(i).touching && !interesct) {
-                game.handler.touchables.get(i).up();
+            if (game.getHandler().touchables.get(i).touching && !interesct) {
+                game.getHandler().touchables.get(i).up();
             }
         }
     }

@@ -1,11 +1,4 @@
-package com.tempbusiness.platformer.graphicobjects.gameobject;
-
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.RectF;
-
-import com.tempbusiness.platformer.graphics.Display;
+package com.tempbusiness.platformer.game.gameobject;
 
 public class Hitbox {
     protected float l,t,r,b;

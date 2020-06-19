@@ -1,34 +1,31 @@
-package com.tempbusiness.platformer.graphicobjects.gameobject;
+package com.tempbusiness.platformer.game.gameobject;
 
 import android.graphics.Color;
-import android.os.Handler;
-import android.os.SystemClock;
 
-import com.tempbusiness.platformer.game.Platformer;
+import com.tempbusiness.platformer.game.handler.Platformer;
 import com.tempbusiness.platformer.game.level.Room;
-import com.tempbusiness.platformer.graphicobjects.gameobject.GameObject;
-import com.tempbusiness.platformer.graphics.Display;
-import com.tempbusiness.platformer.graphics.Renderer;
-import com.tempbusiness.platformer.load.FileLoader.Image;
-import com.tempbusiness.platformer.util.Util;
+import com.tempbusiness.platformer.fileio.FileLoader.Image;
 
 import java.util.Random;
 
 public class Block extends GameObject {
-    public static final String BRICK = "BRICK", GRASS = "GRASS";
+    private Type type;
 
-    public Block(float x, float y, String type, Platformer handler) {
+    public Block(float x, float y, Type type, Platformer handler) {
         super(x,y,1,1, 0, handler);
+        this.type = type;
 
-        img = Image.BLOCK;
-
-        if (type.equals(GRASS)) {
+        if (type == Type.GRASS) {
             int rand = new Random().nextInt(3);
 
             if (rand == 0) img = Image.GRASS1;
             if (rand == 1) img = Image.GRASS2;
             if (rand == 2) img = Image.GRASS3;
 
+        }else if (type == Type.DIRT) {
+            color = Color.rgb(60,30,0);
+        }else{
+            img = Image.BLOCK;
         }
     }
 
@@ -52,6 +49,10 @@ public class Block extends GameObject {
             interaction[2] = 0;
         }
         return interaction;
+    }
+
+    public enum Type {
+        BRICK, GRASS, DIRT
     }
 
     public static class Climbable extends GameObject {

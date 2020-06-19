@@ -1,8 +1,8 @@
-package com.tempbusiness.platformer.graphicobjects.gameobject;
+package com.tempbusiness.platformer.game.gameobject;
 
 import android.graphics.Color;
 
-import com.tempbusiness.platformer.game.Platformer;
+import com.tempbusiness.platformer.game.handler.Platformer;
 
 public class Enemy extends Entity {
     public static final float RUN_VEL =  0.025f;

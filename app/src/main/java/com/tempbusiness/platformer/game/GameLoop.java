@@ -1,9 +1,6 @@
-package com.tempbusiness.platformer.background;
+package com.tempbusiness.platformer.game;
 
-import android.os.Handler;
-import android.os.SystemClock;
-
-import com.tempbusiness.platformer.util.Util;
+import com.tempbusiness.platformer.game.Game;
 
 public class GameLoop implements Runnable {
     public boolean running = false;
@@ -13,18 +10,6 @@ public class GameLoop implements Runnable {
 
     public GameLoop(Game game) {
         this.game = game;
-    }
-    public void tick(){
-        game.handler.tick();
-        game.handler.ticksSinceStart++;
-    }
-    public void render() {
-        game.ui.post(new Runnable() {
-            @Override
-            public void run() {
-               game.canvas.invalidate();
-            }
-        });
     }
 
     public synchronized void start() {
@@ -48,7 +33,7 @@ public class GameLoop implements Runnable {
             delta += (now - lastTime) / ns;
             lastTime = now;
             while(delta >= 1) {
-                render();
+                game.getCanvas().frame();
 
                 updates++;
                 delta--;

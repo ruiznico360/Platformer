@@ -1,6 +1,6 @@
 package com.tempbusiness.platformer.backup;
 
-import com.tempbusiness.platformer.load.FileLoader.Image;
+import com.tempbusiness.platformer.fileio.FileLoader.Image;
 
 public abstract class Graphic {
     public float x, y, w, h;
