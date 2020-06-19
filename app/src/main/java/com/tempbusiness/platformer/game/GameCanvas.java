@@ -1,5 +1,6 @@
 package com.tempbusiness.platformer.game;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -10,9 +11,9 @@ import com.tempbusiness.platformer.util.Util;
 
 public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
     private Game game;
-    private Transition currentTransition;
+//    private Transition currentTransition;
 
-    public GameCanvas(Game game) {
+    protected GameCanvas(Game game) {
         super(game.getContext());
         this.game = game;
 
@@ -22,15 +23,6 @@ public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
         Transition.setupResources();
     }
 
-    public void frame() {
-        game.runOnUIThread(new Runnable() {
-            @Override
-            public void run() {
-                invalidate();
-            }
-        });
-
-    }
     @Override
     public void onDraw(Canvas canvas) {
         game.getHandler().tick();
@@ -44,9 +36,20 @@ public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
         game.getTouchAdapter().handleTouchInput(event);
         return true;
     }
+
+    protected void frame() {
+        game.runOnUIThread(new Runnable() {
+            @Override
+            public void run() {
+                invalidate();
+            }
+        });
+
+    }
     private synchronized void handleGraphics(Canvas canvas) {
         game.getHandler().render(canvas);
     }
+
     public void surfaceDestroyed(SurfaceHolder holder) {}
     public void surfaceChanged(SurfaceHolder holder,int a,int b, int c) {}
     public void surfaceCreated(SurfaceHolder holder) {}

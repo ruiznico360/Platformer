@@ -15,7 +15,6 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
 
         game = new Game(this);
-        game.init();
     }
     @Override
     protected void onPause() {

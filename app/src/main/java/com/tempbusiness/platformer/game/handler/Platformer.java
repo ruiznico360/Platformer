@@ -3,7 +3,8 @@ package com.tempbusiness.platformer.game.handler;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
-import com.tempbusiness.platformer.game.controls.Touchable;
+import com.tempbusiness.platformer.game.graphics.Box;
+import com.tempbusiness.platformer.game.touch.Touchable;
 import com.tempbusiness.platformer.game.Game;
 import com.tempbusiness.platformer.game.level.Camera;
 import com.tempbusiness.platformer.game.level.Room;
@@ -14,35 +15,35 @@ import com.tempbusiness.platformer.game.gameobject.GameObject;
 import com.tempbusiness.platformer.game.gameobject.Player;
 import com.tempbusiness.platformer.game.graphics.Display;
 import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
-import com.tempbusiness.platformer.game.graphics.rendering.Renderer;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class Platformer extends GameHandler {
     public final static int BLOCKS_PER_Y = 14, BLOCKS_PER_X = 25;
+    private final int LAYER_SIZE, GAME_LAYER = 1;
     public static Button left, right, jump, up, down, action;
-    private ArrayList<GameObject> gameObjects = new ArrayList<>();
     private int BUTTON_SIZE;
-    public Player player;
-    public Room currentRoom;
-    public Camera cam;
+    private Player player;
+    private Room currentRoom;
+    private Camera cam;
     private boolean canMove = true;
     private SpecialBlocks specialBlocks;
 
 
     public Platformer(Game gameInstance) {
-        super(gameInstance);
+        super(gameInstance, 3);
 
+        this.LAYER_SIZE = graphics.totalLayers();
         this.renderer = new GRenderer();
         BUTTON_SIZE = (int) Math.min(Display.dpToPx(100, game.getContext()), GRenderer.BLOCK_SIZE * 3);
-        this.cam = new Camera(this, BUTTON_SIZE);
+        this.cam = new Camera(this);
 
         changeRoom(new Room(this, Room.ID.L1_1));
     }
 
     public void changeRoom(Room r) {
         graphics.clear();
-        gameObjects.clear();
 
         specialBlocks = new SpecialBlocks();
 
@@ -50,16 +51,24 @@ public class Platformer extends GameHandler {
         this.currentRoom.setup();
 
         player = new Player(currentRoom.pStartX, currentRoom.pStartY,this);
-        graphics.add(player);
-        cam.tick();
+        addGameObject(player);
+        cam.update(player, currentRoom);
 
+        setupBlackbars();
         setupControls();
     }
     public void superTick() {
         if (canMove) checkControls();
     }
 
-    public void setupControls() {
+    private void setupBlackbars() {
+        addExternalGraphic(new Box(0,0,Display.OFFSET_SCREEN_X, Display.HEIGHT, Color.BLACK));
+        addExternalGraphic(new Box(Display.WIDTH - Display.OFFSET_SCREEN_X,0,Display.OFFSET_SCREEN_X, Display.HEIGHT, Color.BLACK));
+        addExternalGraphic(new Box(0,0, Display.WIDTH,Display.OFFSET_SCREEN_Y, Color.BLACK));
+        addExternalGraphic(new Box(0,Display.HEIGHT - Display.OFFSET_SCREEN_Y,Display.WIDTH, Display.OFFSET_SCREEN_Y, Color.BLACK));
+    }
+
+    private void setupControls() {
         final float indent = Display.dpToPx(10, game.getContext());
         left = new Button(Color.argb(100,255,0,0), this,Touchable.basic(0, Display.HEIGHT - BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE));
         right = new Button(Color.argb(100,255,0,0),this, Touchable.basic(left.x + left.w + indent, left.y, BUTTON_SIZE, BUTTON_SIZE) );
@@ -70,36 +79,35 @@ public class Platformer extends GameHandler {
         up.visible = false;
         action = new Button(Color.argb(100,255,0,0), this,Touchable.basic(down.x, down.y, BUTTON_SIZE, BUTTON_SIZE));
         action.visible = false;
+
+        addExternalGraphic(left);
+        addExternalGraphic(right);
+        addExternalGraphic(jump);
+        addExternalGraphic(down);
+        addExternalGraphic(up);
+        addExternalGraphic(action);
     }
 
-    private void renderControls(Renderer canvas) {
-        left.render(canvas);
-        right.render(canvas);
-        up.render(canvas);
-        down.render(canvas);
-        jump.render(canvas);
-        action.render(canvas);
-    }
-
-    public void checkControls() {
+    private void checkControls() {
         float speed = 0.2f;
-        if (left.touching()) {
+        if (left.isInTouch()) {
             player.velX = -speed;
-        }else if (right.touching()) {
+        }else if (right.isInTouch()) {
             player.velX = speed;
         }else{
             player.velX = 0;
             player.accX = 0;
         }
-        if (jump.touching()) {
+        if (jump.isInTouch()) {
             player.velY = speed;
-        }else if (down.touching()) {
+        }else if (down.isInTouch()) {
             player.velY = -speed;
         }else{
             player.velY = 0;
             player.accY = 0;
         }
     }
+
     public void tick() {
         superTick();
         gTick();
@@ -107,53 +115,51 @@ public class Platformer extends GameHandler {
     }
 
     private void gTick() {
-        for (int i = 0; i < gameObjects.size(); i++) {
-            gameObjects.get(i).tick();
+        for (int i = 0; i < getGameObjects().size(); i++) {
+            ((GameObject)getGameObjects().get(i)).tick();
         }
-    }
-
-    private void gRender(GRenderer renderer) {
-        for (int i = 0; i < gameObjects.size(); i++) {
-            gameObjects.get(i).gRender(renderer);
-        }
-    }
-
-    private void renderBlackBars(Renderer r) {
-        r.drawRect(Display.rect(0,0,Display.OFFSET_SCREEN_X, Display.HEIGHT), Color.BLACK);
-        r.drawRect(Display.rect(Display.WIDTH - Display.OFFSET_SCREEN_X,0,Display.OFFSET_SCREEN_X, Display.HEIGHT), Color.BLACK);
-        r.drawRect(Display.rect(0,0, Display.WIDTH,Display.OFFSET_SCREEN_Y), Color.BLACK);
-        r.drawRect(Display.rect(0,Display.HEIGHT - Display.OFFSET_SCREEN_Y,Display.WIDTH, Display.OFFSET_SCREEN_Y), Color.BLACK);
     }
 
     public void render(Canvas canvas) {
         GRenderer r = (GRenderer) renderWith(canvas);
-        gRender(r);
 
-        for (int i = 0; i < graphics.size(); i++) {
-            graphics.get(i).render(r);
+        for (int i = 0; i < LAYER_SIZE; i++) {
+            if (i == GAME_LAYER) {
+                for (int p = 0; p < graphics.layerSize(i); p++) ((GameObject) graphics.get(p, i)).gRender(r);
+            }else{
+                for (int p = 0; p < graphics.layerSize(i); p++) graphics.get(p, i).render(r);
+
+            }
         }
-
-        renderBlackBars(r);
-        renderControls(r);
     }
 
-    public void addGraphic(Graphic g) {
+    public List<Graphic> getGameObjects() {
+        return graphics.getLayer(GAME_LAYER);
+    }
+
+    public Camera getCam() {
+        return cam;
+    }
+
+    public void addGameObject(GameObject g) {
         if (g instanceof Block.Climbable) {
             specialBlocks.climbables.add((Block.Climbable)g);
         }else if (g instanceof Block.Warpzone) {
             specialBlocks.warpzones.add(((Block.Warpzone)g));
         }
 
-        if (g instanceof GameObject) {
-            gameObjects.add((GameObject)g);
-        }else{
-            graphics.add(g);
-        }
+        graphics.add(g, 1);
+    }
+    public void addExternalGraphic(Graphic g) {
+        graphics.add(g, 2);
+    }
+    public void addBackgroundGraphic(Graphic g) {
+        graphics.add(g, 0);
     }
 
-    public class SpecialBlocks {
-        public ArrayList<Block.Climbable> climbables = new ArrayList<>();
-        public ArrayList<int[]> waters = new ArrayList<>();
-        public ArrayList<Block.Warpzone> warpzones = new ArrayList<>();
+    private class SpecialBlocks {
+        private ArrayList<Block.Climbable> climbables = new ArrayList<>();
+        private ArrayList<int[]> waters = new ArrayList<>();
+        private ArrayList<Block.Warpzone> warpzones = new ArrayList<>();
     }
 }

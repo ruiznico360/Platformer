@@ -1,4 +1,4 @@
-package com.tempbusiness.platformer.game.controls;
+package com.tempbusiness.platformer.game.touch;
 
 import android.graphics.Rect;
 import android.view.MotionEvent;
@@ -9,8 +9,8 @@ import com.tempbusiness.platformer.game.graphics.Display;
 import java.util.HashMap;
 
 public class TouchAdapter {
-    public Game game;
-    public HashMap<Integer, Coords> activePointers = new HashMap<>();
+    private Game game;
+    private HashMap<Integer, Coords> activePointers = new HashMap<>();
 
     public TouchAdapter(Game game) {
         this.game = game;
@@ -41,10 +41,10 @@ public class TouchAdapter {
             }
         }
     }
-    public void handleDown() {
-        for (int i = 0; i < game.getHandler().touchables.size(); i++) {
+    private void handleDown() {
+        for (int i = 0; i < game.getHandler().getTouchables().size(); i++) {
             boolean interesct = false;
-            Rect touchableBounds = Display.rect(game.getHandler().touchables.get(i).x, game.getHandler().touchables.get(i).y, game.getHandler().touchables.get(i).w, game.getHandler().touchables.get(i).h);
+            Rect touchableBounds = game.getHandler().getTouchables().get(i).bounds();
 
             for (Coords c : activePointers.values()) {
                 if (touchableBounds.contains((int)c.x, (int)c.y)) {
@@ -52,19 +52,19 @@ public class TouchAdapter {
                 }
             }
 
-            if (!game.getHandler().touchables.get(i).touching && interesct) {
-                game.getHandler().touchables.get(i).down();
-            }else if (game.getHandler().touchables.get(i).touching && !interesct) {
-                game.getHandler().touchables.get(i).up();
+            if (!game.getHandler().getTouchables().get(i).isInTouch() && interesct) {
+                game.getHandler().getTouchables().get(i).down();
+            }else if (game.getHandler().getTouchables().get(i).isInTouch() && !interesct) {
+                game.getHandler().getTouchables().get(i).up();
             }
         }
     }
-    public void handleUp(int pointerId) {
+    private void handleUp(int pointerId) {
         activePointers.remove(pointerId);
         
-        for (int i = 0; i < game.getHandler().touchables.size(); i++) {
+        for (int i = 0; i < game.getHandler().getTouchables().size(); i++) {
             boolean interesct = false;
-            Rect touchableBounds = Display.rect(game.getHandler().touchables.get(i).x, game.getHandler().touchables.get(i).y, game.getHandler().touchables.get(i).w, game.getHandler().touchables.get(i).h);
+            Rect touchableBounds = game.getHandler().getTouchables().get(i).bounds();
 
             for (Coords c : activePointers.values()) {
                 if (touchableBounds.contains((int)c.x, (int)c.y)) {
@@ -72,14 +72,14 @@ public class TouchAdapter {
                 }
             }
 
-            if (game.getHandler().touchables.get(i).touching && !interesct) {
-                game.getHandler().touchables.get(i).up();
+            if (game.getHandler().getTouchables().get(i).isInTouch() && !interesct) {
+                game.getHandler().getTouchables().get(i).up();
             }
         }
     }
-    public class Coords {
-        public float x,y;
-        public Coords(float x, float y) {
+    private class Coords {
+        private float x,y;
+        private Coords(float x, float y) {
             this.x = x;
             this.y = y;
         }

@@ -1,12 +1,16 @@
 package com.tempbusiness.platformer.game.gameobject;
 
+import com.tempbusiness.platformer.game.graphics.Graphic;
 import com.tempbusiness.platformer.game.handler.Platformer;
 import com.tempbusiness.platformer.fileio.FileLoader;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Entity extends GameObject{
     public static final float TERM_VEL = -2;
     public float velX, velY, accX, accY;
-    public boolean grounded = false;
+    protected boolean grounded = false;
 
     public Entity(float x, float y, float w, float h, int color, Platformer handler) {
         super(x,y,w,h,color, handler);
@@ -15,7 +19,7 @@ public abstract class Entity extends GameObject{
         super(x,y,w,h,img, handler);
     }
 
-    public void updateLocation() {
+    protected void updateLocation() {
         velX += accX;
         velY += accY;
 
@@ -28,13 +32,15 @@ public abstract class Entity extends GameObject{
         updateLocation();
     }
 
-    public void blockCollision() {
+    private void blockCollision() {
         Hitbox curr = getFutHitbox();
         Hitbox prev = getHitbox();
 
-        for (int i = 0; i < handler.graphics.size(); i++) {
-            if (handler.graphics.get(i) instanceof Block) {
-                Block b = (Block) handler.graphics.get(i);
+        List<Graphic> gameObjects = handler.getGameObjects();
+
+        for (int i = 0; i < gameObjects.size(); i++) {
+            if (gameObjects.get(i) instanceof Block) {
+                Block b = (Block) gameObjects.get(i);
                 Hitbox h = b.getHitbox();
                 if (h.intersects(curr)) {
 
@@ -55,7 +61,7 @@ public abstract class Entity extends GameObject{
         return new Hitbox(x + velX, y + velY, w, h);
     }
 
-    public void stop() {
+    protected void stop() {
         velX = 0;
         velY = 0;
         accX = 0;

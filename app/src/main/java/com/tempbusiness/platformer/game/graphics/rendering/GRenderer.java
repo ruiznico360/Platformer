@@ -24,7 +24,7 @@ public class GRenderer extends Renderer {
         return (y * BLOCK_SIZE);
     }
     public static int displayY(float y, Platformer handler) {
-        return (int)(Display.HEIGHT - (preCamDisplayY(y) + handler.cam.y() + Display.OFFSET_SCREEN_Y));
+        return (int)(Display.HEIGHT - (preCamDisplayY(y) + handler.getCam().y() + Display.OFFSET_SCREEN_Y));
     }
 
     public static float preCamDisplayX(float x) {
@@ -32,6 +32,6 @@ public class GRenderer extends Renderer {
     }
 
     public static int displayX(float x, Platformer handler) {
-        return (int)(preCamDisplayX(x) + handler.cam.x() + Display.OFFSET_SCREEN_X);
+        return (int)(preCamDisplayX(x) + handler.getCam().x() + Display.OFFSET_SCREEN_X);
     }
 }

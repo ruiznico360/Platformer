@@ -29,7 +29,7 @@ public class Block extends GameObject {
         }
     }
 
-    public float[] interactEntity(Hitbox prev, float velX, float velY) {
+    protected float[] interactEntity(Hitbox prev, float velX, float velY) {
         float[] interaction = new float[]{prev.x(), prev.y(), velX, velY};
         Hitbox h = getHitbox();
 

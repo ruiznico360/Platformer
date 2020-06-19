@@ -5,7 +5,7 @@ public class Hitbox {
 
 
 
-    public Hitbox(float x, float y, float w, float h) {
+    protected Hitbox(float x, float y, float w, float h) {
         this.l = x;
         this.t = y + h;
         this.r = x + w;

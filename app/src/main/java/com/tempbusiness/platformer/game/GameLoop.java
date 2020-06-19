@@ -1,29 +1,24 @@
 package com.tempbusiness.platformer.game;
 
-import com.tempbusiness.platformer.game.Game;
-
 public class GameLoop implements Runnable {
-    public boolean running = false;
+    private static final int FRAMES_PER_SECOND = 60;
+    private boolean running = false;
     public Game game;
-    public static final int FRAMES_PER_SECOND = 60;
-    private Thread thread;
 
-    public GameLoop(Game game) {
+    GameLoop(Game game) {
         this.game = game;
     }
 
-    public synchronized void start() {
+    synchronized void start() {
         if (running) {
             return;
         }
         running = true;
-        thread = new Thread(this);
-        thread.start();
+        new Thread(this).start();
     }
     public void run() {
         long lastTime = System.nanoTime();
-        double amountOfTicks = FRAMES_PER_SECOND;
-        double ns = 1000000000 / amountOfTicks;
+        double ns = 1000000000 / FRAMES_PER_SECOND;
         double delta = 0;
         long timer = System.currentTimeMillis();
         int updates = 0;
@@ -47,7 +42,7 @@ public class GameLoop implements Runnable {
             }
         }
     }
-    public void stop() {
+    void stop() {
         running = false;
     }
 }

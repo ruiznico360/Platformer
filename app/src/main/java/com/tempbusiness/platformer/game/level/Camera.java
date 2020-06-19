@@ -10,8 +10,10 @@ public class Camera {
     private Platformer handler;
     private int controlS;
     private float x,y, y_offset, x_offset;
+    private Player player;
+    private Room room;
 
-    public Camera(Platformer handler, int controlS) {
+    public Camera(Platformer handler) {
         this.handler = handler;
         X_MAX_OFFSET = GRenderer.G_WIDTH * 0.2f;
         Y_MAX_OFFSET = GRenderer.G_HEIGHT * 0.1f;
@@ -23,18 +25,25 @@ public class Camera {
         y_offset = CENTER_Y;
     }
 
+    public void update(Player p, Room r) {
+        this.player = p;
+        this.room = r;
+        tick();
+    }
+
     public float x() {
         return x;
     }
     public float y() {
         return y;
     }
+
     public void tick() {
         handleX();
         handleY();
     }
     private void handleY() {
-        if (handler.currentRoom.CAM_Y_BOUNDS.size() == 1) {
+        if (room.CAM_Y_BOUNDS.size() == 1) {
             handleUnboundedY();
         }else{
             handleLevelY();
@@ -42,13 +51,13 @@ public class Camera {
     }
 
     private void handleUnboundedY() {
-        Room r = handler.currentRoom;
+        Room r = room;
         float max_y = GRenderer.preCamDisplayY(r.CAM_Y_BOUNDS.get(0).y);
-        float py = GRenderer.preCamDisplayY(handler.player.y);
+        float py = GRenderer.preCamDisplayY(player.y);
         float ideal_y = - py;
 
-        if (handler.player.velY != 0) {
-            y_offset = handler.player.velY < 0 ? Math.max(y_offset - BASE_SPEED, CENTER_Y - Y_MAX_OFFSET) : Math.min(y_offset + BASE_SPEED, CENTER_Y + Y_MAX_OFFSET);
+        if (player.velY != 0) {
+            y_offset = player.velY < 0 ? Math.max(y_offset - BASE_SPEED, CENTER_Y - Y_MAX_OFFSET) : Math.min(y_offset + BASE_SPEED, CENTER_Y + Y_MAX_OFFSET);
         }
 
         ideal_y += y_offset;
@@ -65,8 +74,8 @@ public class Camera {
     }
 
     private void handleLevelY() {
-        Room r = handler.currentRoom;
-        Player p = handler.player;
+        Room r = room;
+        Player p = player;
 
         float scrollTo = 0;
         for (Block b : r.CAM_Y_BOUNDS) {
@@ -80,14 +89,14 @@ public class Camera {
 
     }
     private void handleX() {
-        Room r = handler.currentRoom;
+        Room r = room;
         float max_x = GRenderer.preCamDisplayX(r.CAM_MAX_X.x);
 
-        float px = GRenderer.preCamDisplayX(handler.player.x);
+        float px = GRenderer.preCamDisplayX(player.x);
         float ideal_x = - px;
 
-        if (handler.player.velX != 0) {
-            x_offset = handler.player.velX > 0 ? Math.max(x_offset - BASE_SPEED, CENTER_X - X_MAX_OFFSET) : Math.min(x_offset + BASE_SPEED, CENTER_X + X_MAX_OFFSET);
+        if (player.velX != 0) {
+            x_offset = player.velX > 0 ? Math.max(x_offset - BASE_SPEED, CENTER_X - X_MAX_OFFSET) : Math.min(x_offset + BASE_SPEED, CENTER_X + X_MAX_OFFSET);
         }
 
         ideal_x += x_offset;

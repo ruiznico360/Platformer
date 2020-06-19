@@ -6,8 +6,8 @@ import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
-import com.tempbusiness.platformer.game.controls.TouchAdapter;
-import com.tempbusiness.platformer.game.controls.Touchable;
+import com.tempbusiness.platformer.game.touch.TouchAdapter;
+import com.tempbusiness.platformer.game.touch.Touchable;
 import com.tempbusiness.platformer.game.handler.GameHandler;
 import com.tempbusiness.platformer.game.handler.MainMenu;
 import com.tempbusiness.platformer.game.handler.Platformer;
@@ -24,6 +24,7 @@ public class Game {
 
     public Game(Activity c) {
         this.c = c;
+        init();
     }
 
     public void paused() {
@@ -94,7 +95,7 @@ public class Game {
         ui.post(r);
     }
 
-    public void init() {
+    private void init() {
         Display.initDimens(c);
         FileLoader.setup(c);
         c.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);

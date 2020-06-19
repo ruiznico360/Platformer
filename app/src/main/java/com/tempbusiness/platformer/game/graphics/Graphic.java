@@ -5,8 +5,9 @@ import com.tempbusiness.platformer.fileio.FileLoader.Image;
 
 public abstract class Graphic {
     public float x, y, w, h;
-    public int color;
-    public Image img;
+    protected int color;
+    protected Image img;
+    public abstract void render(Renderer canvas);
 
     public Graphic(float x, float y, float w, float h, int color) {
         this.x = x;
@@ -20,5 +21,4 @@ public abstract class Graphic {
         this.img = img;
     }
 
-    public abstract void render(Renderer canvas);
 }

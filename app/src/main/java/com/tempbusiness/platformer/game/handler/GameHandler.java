@@ -2,22 +2,23 @@ package com.tempbusiness.platformer.game.handler;
 
 import android.graphics.Canvas;
 
-import com.tempbusiness.platformer.game.controls.Touchable;
+import com.tempbusiness.platformer.game.touch.Touchable;
 import com.tempbusiness.platformer.game.Game;
-import com.tempbusiness.platformer.game.graphics.Graphic;
+import com.tempbusiness.platformer.game.graphics.rendering.GraphicsLayerer;
 import com.tempbusiness.platformer.game.graphics.rendering.Renderer;
 
 import java.util.ArrayList;
 
 public class GameHandler {
-    public ArrayList<Graphic> graphics = new ArrayList<>();
-    public ArrayList<Touchable> touchables = new ArrayList<>();
+    protected GraphicsLayerer graphics;
+    private ArrayList<Touchable> touchables = new ArrayList<>();
     public int ticksSinceStart;
-    public Game game;
-    public Renderer renderer;
+    protected Game game;
+    protected Renderer renderer;
 
-    public GameHandler(Game game) {
+    public GameHandler(Game game, int layers) {
         this.game = game;
+        this.graphics = new GraphicsLayerer(layers);
     }
 
     public void tick() {
@@ -25,16 +26,26 @@ public class GameHandler {
     }
     public void render(Canvas canvas) {
         Renderer r = renderWith(canvas);
-        for (int i = 0; i < graphics.size(); i++) {
-            graphics.get(i).render(r);
+        for (int i = 0; i < graphics.totalLayers(); i++) {
+            for (int p = 0; p < graphics.layerSize(i); p++) {
+                graphics.get(p,i).render(r);
+            }
         }
     }
-    public void superTick() {
 
-    }
-    public Renderer renderWith(Canvas canvas) {
+    protected Renderer renderWith(Canvas canvas) {
         if (renderer == null) renderer = new Renderer();
         this.renderer.setCanvas(canvas);
         return renderer;
     }
+
+    public GraphicsLayerer getGraphics() {
+        return graphics;
+    }
+
+    public ArrayList<Touchable> getTouchables() {
+        return touchables;
+    }
+
+    public void superTick() {}
 }

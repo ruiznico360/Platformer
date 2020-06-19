@@ -6,7 +6,8 @@ import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
 import com.tempbusiness.platformer.fileio.FileLoader.Image;
 
 public class GameObject extends Box {
-    public Platformer handler;
+    protected Platformer handler;
+
     public GameObject(float x, float y, float w, float h, int color, Platformer handler) {
         super(x,y,w,h,color);
         this.handler = handler;
@@ -24,11 +25,9 @@ public class GameObject extends Box {
         }
     }
 
-    public void tick() {
-
-    }
-
-    public Hitbox getHitbox() {
+    protected Hitbox getHitbox() {
         return new Hitbox(x,y,w,h);
     }
+
+    public void tick() {}
 }

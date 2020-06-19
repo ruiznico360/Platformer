@@ -9,7 +9,7 @@ public class AudioPlayer {
 //    }
 //
 //    public void tick() {
-//        MusicClip[] clipArray = new MusicClip[musicClips.size()];
+//        MusicClip[] clipArray = new MusicClip[musicClips.overallSize()];
 //        musicClips.toArray(clipArray);
 //        for (MusicClip a : clipArray) {
 //            if (game.game.gameLoop.running) a.tick();

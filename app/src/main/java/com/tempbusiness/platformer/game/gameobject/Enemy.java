@@ -11,11 +11,6 @@ public class Enemy extends Entity {
         super(x,y,1,1, Color.rgb(0,100,0), handler);
     }
 
-    public void updateLocation() {
-    }
-    public void gravity() {
-    }
-    public void ai(Hitbox h) {
-
+    protected void updateLocation() {
     }
 }
