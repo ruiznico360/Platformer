@@ -6,7 +6,7 @@ import com.tempbusiness.platformer.game.gameobject.Player;
 import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
 
 public class Camera {
-    private final float Y_MAX_OFFSET, X_MAX_OFFSET, BASE_SPEED, CENTER_X, CENTER_Y, LEVEL_SPEED;
+    private final float Y_MAX_OFFSET, X_MAX_OFFSET, BASE_SPEED, CENTER_X, CENTER_Y, LEVEL_MIN_SPEED;
     private Platformer handler;
     private int controlS;
     private float x,y, y_offset, x_offset;
@@ -15,10 +15,10 @@ public class Camera {
 
     public Camera(Platformer handler) {
         this.handler = handler;
-        X_MAX_OFFSET = GRenderer.G_WIDTH * 0.2f;
+        X_MAX_OFFSET = GRenderer.G_WIDTH * 0.1f;
         Y_MAX_OFFSET = GRenderer.G_HEIGHT * 0.1f;
         BASE_SPEED = GRenderer.G_WIDTH / 200f;
-        LEVEL_SPEED = BASE_SPEED * 2;
+        LEVEL_MIN_SPEED = BASE_SPEED * 2;
         CENTER_X = GRenderer.G_WIDTH / 2;
         CENTER_Y = GRenderer.G_HEIGHT / 2;
         x_offset = CENTER_X;
@@ -83,8 +83,10 @@ public class Camera {
             scrollTo = -GRenderer.preCamDisplayY(b.y);
         }
 
+        float speed = Math.max(Math.abs(GRenderer.preCamDisplayY(player.velY)) * 1.5f, LEVEL_MIN_SPEED);
+
         if (y != scrollTo) {
-            y = y > scrollTo ? Math.max(y - LEVEL_SPEED, scrollTo) : Math.min(y + LEVEL_SPEED, scrollTo);
+            y = y > scrollTo ? Math.max(y - speed, scrollTo) : Math.min(y + speed, scrollTo);
         }
 
     }

@@ -1,9 +1,11 @@
 package com.tempbusiness.platformer.game.handler;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
 import com.tempbusiness.platformer.game.graphics.Box;
+import com.tempbusiness.platformer.game.level.Controller;
 import com.tempbusiness.platformer.game.touch.Touchable;
 import com.tempbusiness.platformer.game.Game;
 import com.tempbusiness.platformer.game.level.Camera;
@@ -22,12 +24,10 @@ import java.util.List;
 public class Platformer extends GameHandler {
     public final static int BLOCKS_PER_Y = 14, BLOCKS_PER_X = 25;
     private final int LAYER_SIZE, GAME_LAYER = 1;
-    public static Button left, right, jump, up, down, action;
-    private int BUTTON_SIZE;
     private Player player;
     private Room currentRoom;
     private Camera cam;
-    private boolean canMove = true;
+    private Controller controller;
     private SpecialBlocks specialBlocks;
 
 
@@ -36,8 +36,8 @@ public class Platformer extends GameHandler {
 
         this.LAYER_SIZE = graphics.totalLayers();
         this.renderer = new GRenderer();
-        BUTTON_SIZE = (int) Math.min(Display.dpToPx(100, game.getContext()), GRenderer.BLOCK_SIZE * 3);
         this.cam = new Camera(this);
+        this.controller = new Controller(this);
 
         changeRoom(new Room(this, Room.ID.L1_1));
     }
@@ -52,13 +52,16 @@ public class Platformer extends GameHandler {
 
         player = new Player(currentRoom.pStartX, currentRoom.pStartY,this);
         addGameObject(player);
+
         cam.update(player, currentRoom);
+        controller.update(player);
 
         setupBlackbars();
-        setupControls();
+        controller.setupButtons();
+        controller.setMoveState(r.moveState);
     }
     public void superTick() {
-        if (canMove) checkControls();
+        controller.checkControls();
     }
 
     private void setupBlackbars() {
@@ -66,46 +69,6 @@ public class Platformer extends GameHandler {
         addExternalGraphic(new Box(Display.WIDTH - Display.OFFSET_SCREEN_X,0,Display.OFFSET_SCREEN_X, Display.HEIGHT, Color.BLACK));
         addExternalGraphic(new Box(0,0, Display.WIDTH,Display.OFFSET_SCREEN_Y, Color.BLACK));
         addExternalGraphic(new Box(0,Display.HEIGHT - Display.OFFSET_SCREEN_Y,Display.WIDTH, Display.OFFSET_SCREEN_Y, Color.BLACK));
-    }
-
-    private void setupControls() {
-        final float indent = Display.dpToPx(10, game.getContext());
-        left = new Button(Color.argb(100,255,0,0), this,Touchable.basic(0, Display.HEIGHT - BUTTON_SIZE, BUTTON_SIZE, BUTTON_SIZE));
-        right = new Button(Color.argb(100,255,0,0),this, Touchable.basic(left.x + left.w + indent, left.y, BUTTON_SIZE, BUTTON_SIZE) );
-        jump = new Button(Color.argb(100,255,0,0), this, Touchable.basic(Display.WIDTH - BUTTON_SIZE, left.y, BUTTON_SIZE, BUTTON_SIZE));
-        down = new Button(Color.argb(100,255,0,0), this,Touchable.basic(jump.x, jump.y - BUTTON_SIZE - indent, BUTTON_SIZE, BUTTON_SIZE));
-        down.visible = false;
-        up = new Button(Color.argb(100,255,0,0), this,Touchable.basic(jump.x, down.y - BUTTON_SIZE - indent, BUTTON_SIZE, BUTTON_SIZE));
-        up.visible = false;
-        action = new Button(Color.argb(100,255,0,0), this,Touchable.basic(down.x, down.y, BUTTON_SIZE, BUTTON_SIZE));
-        action.visible = false;
-
-        addExternalGraphic(left);
-        addExternalGraphic(right);
-        addExternalGraphic(jump);
-        addExternalGraphic(down);
-        addExternalGraphic(up);
-        addExternalGraphic(action);
-    }
-
-    private void checkControls() {
-        float speed = 0.2f;
-        if (left.isInTouch()) {
-            player.velX = -speed;
-        }else if (right.isInTouch()) {
-            player.velX = speed;
-        }else{
-            player.velX = 0;
-            player.accX = 0;
-        }
-        if (jump.isInTouch()) {
-            player.velY = speed;
-        }else if (down.isInTouch()) {
-            player.velY = -speed;
-        }else{
-            player.velY = 0;
-            player.accY = 0;
-        }
     }
 
     public void tick() {
@@ -137,6 +100,9 @@ public class Platformer extends GameHandler {
         return graphics.getLayer(GAME_LAYER);
     }
 
+    public Context getContext() {
+        return game.getContext();
+    }
     public Camera getCam() {
         return cam;
     }

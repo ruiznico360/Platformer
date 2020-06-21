@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
+import com.tempbusiness.platformer.game.level.Controller;
 import com.tempbusiness.platformer.game.touch.TouchAdapter;
 import com.tempbusiness.platformer.game.touch.Touchable;
 import com.tempbusiness.platformer.game.handler.GameHandler;
@@ -44,16 +45,16 @@ public class Game {
     }
 
     public boolean dispatchKeyEvent(KeyEvent event) {
-        Touchable area = Platformer.jump.area;
+        Touchable area = Controller.jump.area;
         if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_LEFT) {
-            area = Platformer.left.area;
+            area = Controller.left.area;
         }else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_RIGHT) {
-            area = Platformer.right.area;
+            area = Controller.right.area;
         }
         if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_UP) {
-            area = Platformer.jump.area;
+            area = Controller.jump.area;
         }else if (event.getKeyCode() == KeyEvent.KEYCODE_DPAD_DOWN) {
-            area = Platformer.down.area;
+            area = Controller.down.area;
         }
 
         if (event.getAction() == KeyEvent.ACTION_DOWN) area.down();

@@ -30,13 +30,15 @@ public class Block extends GameObject {
     }
 
     protected float[] interactEntity(Hitbox prev, float velX, float velY) {
-        float[] interaction = new float[]{prev.x(), prev.y(), velX, velY};
+        float[] interaction = new float[]{prev.x(), prev.y(), velX, velY, 0};
         Hitbox h = getHitbox();
 
         if (prev.alignedX(h)){
             if (prev.b < y) {
+                interaction[4] = 2;
                 interaction[1] = y - prev.h();
             }else {
+                interaction[4] = 1;
                 interaction[1] = y + 1;
             }
             interaction[3] = 0;

@@ -15,6 +15,7 @@ public class Room {
     public ArrayList<Block> CAM_Y_BOUNDS = new ArrayList<>();
     public ID id;
     public Platformer handler;
+    public Controller.MoveState moveState = Controller.MoveState.WALK;
 
     public Room(Platformer handler, ID id) {
         this.id = id;
@@ -45,7 +46,7 @@ public class Room {
             handler.addGameObject(new Block.Warpzone(1,4,handler, new Room(handler, ID.L1_2)));
             handler.addGameObject(new Block.Warpzone(1,5,handler, null));
 
-            for (int i = 0; i < width - 2; i++) {
+            for (int i = 0; i < width; i++) {
                 handler.addGameObject(new Block(i,0, Block.Type.DIRT, handler));
                 handler.addGameObject(new Block(i,1, Block.Type.DIRT, handler));
                 handler.addGameObject(new Block(i,2, Block.Type.DIRT, handler));
