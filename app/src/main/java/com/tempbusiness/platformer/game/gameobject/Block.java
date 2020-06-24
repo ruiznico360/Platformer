@@ -5,6 +5,7 @@ import android.graphics.Color;
 import com.tempbusiness.platformer.game.handler.Platformer;
 import com.tempbusiness.platformer.game.level.Room;
 import com.tempbusiness.platformer.fileio.FileLoader.Image;
+import com.tempbusiness.platformer.util.Util;
 
 import java.util.Random;
 
@@ -29,14 +30,14 @@ public class Block extends GameObject {
         }
     }
 
-    protected float[] interactEntity(Hitbox prev, float velX, float velY) {
-        float[] interaction = new float[]{prev.x(), prev.y(), velX, velY, 0};
+    protected float[] interactEntity(Entity en, Hitbox prev) {
+        float[] interaction = new float[]{en.x, en.y, en.velX, en.velY, 0};
         Hitbox h = getHitbox();
 
         if (prev.alignedX(h)){
             if (prev.b < y) {
                 interaction[4] = 2;
-                interaction[1] = y - prev.h();
+                interaction[1] = y - en.h;
             }else {
                 interaction[4] = 1;
                 interaction[1] = y + 1;
@@ -44,7 +45,7 @@ public class Block extends GameObject {
             interaction[3] = 0;
         }else if (prev.alignedY(h)) {
             if (prev.l < x) {
-                interaction[0] = x - prev.w();
+                interaction[0] = x - en.w;
             }else {
                 interaction[0] = x + 1;
             }

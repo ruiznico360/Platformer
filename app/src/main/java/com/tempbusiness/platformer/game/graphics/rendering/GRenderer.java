@@ -1,5 +1,6 @@
 package com.tempbusiness.platformer.game.graphics.rendering;
 
+import android.graphics.Bitmap;
 import android.graphics.Rect;
 
 import com.tempbusiness.platformer.game.handler.Platformer;
@@ -14,7 +15,7 @@ public class GRenderer extends Renderer {
         drawRect(r,color);
     }
 
-    public void drawGBitmap(Platformer handler, float x, float y, float w, float h, FileLoader.Image img) {
+    public void drawGBitmap(Platformer handler, float x, float y, float w, float h, Bitmap img) {
         Rect r = new Rect(displayX(x, handler), displayY(y + h, handler), displayX(x + w, handler), displayY(y, handler));
 
         drawBitmap(r,img);

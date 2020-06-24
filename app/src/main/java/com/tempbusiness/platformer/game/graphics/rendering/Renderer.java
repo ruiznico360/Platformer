@@ -1,5 +1,6 @@
 package com.tempbusiness.platformer.game.graphics.rendering;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -19,9 +20,9 @@ public class Renderer {
         canvas.drawRect(r, paint(color));
     }
 
-    public void drawBitmap(Rect r, FileLoader.Image img) {
+    public void drawBitmap(Rect r, Bitmap img) {
         if (oob(r)) return;
-        canvas.drawBitmap(img.img, null, r, null);
+        canvas.drawBitmap(img, null, r, null);
     }
 
     private boolean oob(Rect r) {

@@ -21,7 +21,7 @@ public class GameObject extends Box {
         if (img == null) {
             canvas.drawGRect(handler, x,y,w,h, color);
         }else{
-            canvas.drawGBitmap(handler, x,y,w,h, img);
+            canvas.drawGBitmap(handler, x,y,w,h, img.img);
         }
     }
 

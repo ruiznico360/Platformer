@@ -3,30 +3,30 @@ package com.tempbusiness.platformer.game.level;
 import android.graphics.Color;
 
 import com.tempbusiness.platformer.game.gameobject.EntityUtil;
-import com.tempbusiness.platformer.game.gameobject.Player;
+import com.tempbusiness.platformer.game.gameobject.player.Player;
+import com.tempbusiness.platformer.game.gameobject.player.PlayerWalkPhysics;
 import com.tempbusiness.platformer.game.graphics.Button;
 import com.tempbusiness.platformer.game.graphics.Display;
 import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
 import com.tempbusiness.platformer.game.handler.Platformer;
 import com.tempbusiness.platformer.game.touch.Touchable;
-import com.tempbusiness.platformer.util.Util;
 
 public class Controller {
     public static Button left, right, jump, up, down, action;
-    private final float JUMP_VEL = 0.3f, MAX_RUN_SPEED = 0.3f, RUN_ACC = 0.005f;
-    private final int MAX_JUMP_FRAMES = 15, RUN_DEC = 2;
+    public static final boolean DEBUG = false;
     private final int BUTTON_SIZE;
     private Platformer handler;
     private Player player;
+    private PlayerWalkPhysics playerWalkPhysics;
     private MoveState moveState;
-    private JumpHandler jumpHandler;
 
 
     public Controller(Platformer handler) {
         this.handler = handler;
         BUTTON_SIZE = (int) Math.min(Display.dpToPx(100, handler.getContext()), GRenderer.BLOCK_SIZE * 3);
         moveState = MoveState.NONE;
-        jumpHandler = new JumpHandler();
+
+        playerWalkPhysics = new PlayerWalkPhysics();
     }
 
     public void setupButtons() {
@@ -51,6 +51,7 @@ public class Controller {
 
     public void update(Player player) {
         this.player = player;
+        playerWalkPhysics.setPlayer(player);
     }
 
     public void setMoveState(MoveState m) {
@@ -62,41 +63,20 @@ public class Controller {
     }
 
     public void checkControls() {
-        if (moveState == MoveState.WALK) handleWalk();
+        if (moveState == MoveState.WALK) {
+            if (DEBUG) debug();
+            else playerWalkPhysics.handleWalk(left.isInTouch(), right.isInTouch(), jump.isInTouch());
+        }
     }
 
-    private void handleWalk() {
-        if (left.isInTouch()) {
-            EntityUtil.accelerateXTo(player, -MAX_RUN_SPEED, -RUN_ACC);
-        }else if (right.isInTouch()) {
-            EntityUtil.accelerateXTo(player, MAX_RUN_SPEED, RUN_ACC);
-        }else{
-            EntityUtil.accelerateXTo(player, 0, Math.signum(player.velX) * -RUN_ACC/RUN_DEC);
-        }
+    private void debug() {
+        final float speed = 0.2f;
+        if (left.isInTouch()) player.velX = -speed;
+        else if (right.isInTouch()) player.velX = speed;
+        else player.velX = 0;
 
-        jumpHandler.handle(jump.isInTouch());
-    }
-
-    private class JumpHandler {
-        private float power;
-        private int jumpCounter;
-
-        private void handle(boolean jumpButton) {
-            if (jumpButton) {
-                if (player.isOnCeiling()) jumpCounter = MAX_JUMP_FRAMES;
-
-                if (jumpCounter < MAX_JUMP_FRAMES) {
-                    if (jumpCounter == 0) {
-                        power = JUMP_VEL * (1 + player.speedX() / 2);
-                    }
-
-                    player.velY = power;
-                    jumpCounter++;
-                }
-            }else{
-                if (player.isGrounded()) jumpCounter = 0;
-                else jumpCounter = MAX_JUMP_FRAMES;
-            }
-        }
+        if (down.isInTouch()) player.velY = -speed;
+        else if (jump.isInTouch()) player.velY = speed;
+        else player.velY = 0;
     }
 }

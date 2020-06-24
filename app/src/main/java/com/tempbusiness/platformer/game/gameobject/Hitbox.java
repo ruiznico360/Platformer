@@ -39,6 +39,6 @@ public class Hitbox {
     }
 
     public String toString() {
-        return l + " " + t + " " + r + " " + b;
+        return "Hitbox: " + l + " " + t + " " + r + " " + b;
     }
 }

@@ -6,22 +6,29 @@ import com.tempbusiness.platformer.util.Util;
 public class EntityUtil {
 
     public static void applyGravity(Entity ev) {
-        if (ev.velY + ev.accY < Entity.TERM_VEL) {
-            ev.accY = 0;
-            ev.velY = Entity.TERM_VEL;
-        }else{
-            ev.accY = Entity.G;
-        }
+        accelerateYTo(ev, -Entity.TERM_VEL, Entity.G);
     }
 
-    public static void accelerateXTo(Entity ev, float speed, float acc) {
-        int dir = (int) Math.signum(acc);
+    public static void accelerateXTo(Entity ev, float vel, float acc) {
+        int dir = (int) Math.signum(vel - ev.velX);
+        float accDir = dir * acc;
 
-        if (dir * ev.velX + acc > dir * speed) {
+        if (dir * ev.velX + accDir > dir * vel) {
             ev.accX = 0;
-            ev.velX = speed;
+            ev.velX = vel;
         }else{
-            ev.accX = acc;
+            ev.accX = accDir;
+        }
+    }
+    public static void accelerateYTo(Entity ev, float vel, float acc) {
+        int dir = (int) Math.signum(vel - ev.velY);
+        float accDir = dir * acc;
+
+        if (dir * ev.velY + accDir > dir * vel) {
+            ev.accY = 0;
+            ev.velY = vel;
+        }else{
+            ev.accY = accDir;
         }
     }
 }

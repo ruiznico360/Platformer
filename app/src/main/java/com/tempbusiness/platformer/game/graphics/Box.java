@@ -19,7 +19,7 @@ public class Box extends Graphic {
         if (img == null) {
             canvas.drawRect(dst, color);
         }else{
-            canvas.drawBitmap(dst, img);
+            canvas.drawBitmap(dst, img.img);
         }
     }
 }

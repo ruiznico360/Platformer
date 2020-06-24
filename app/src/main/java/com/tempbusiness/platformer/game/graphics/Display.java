@@ -2,6 +2,7 @@ package com.tempbusiness.platformer.game.graphics;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.DisplayMetrics;
@@ -64,5 +65,10 @@ public class Display {
 
     public static Bitmap resizeToScale(Bitmap original, int newWidth) {
         return Bitmap.createScaledBitmap(original, newWidth, (int)((float) original.getHeight() * ((float)(newWidth) / (float)original.getWidth())), false);
+    }
+    public static Bitmap inverse(Bitmap b) {
+        Matrix matrix = new Matrix();
+        matrix.setScale(-1,1);
+        return Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, true);
     }
 }

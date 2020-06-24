@@ -65,7 +65,9 @@ public class Room {
             handler.addGameObject(new Block(9,8, Block.Type.BRICK, handler));
             handler.addGameObject(new Block(17,8, Block.Type.BRICK, handler));
             handler.addGameObject(new Block(width - 2,5, Block.Type.BRICK, handler));
-            handler.addGameObject(new Block(width - 2,10, Block.Type.BRICK, handler));
+            handler.addGameObject(new Block(width - 2,9, Block.Type.BRICK, handler));
+            handler.addGameObject(new Block(width - 3,10, Block.Type.BRICK, handler));
+
 
         }else{
 //            handler.addGameObject(new Box(0,0, Display.WIDTH, Display.HEIGHT, Color.CYAN));

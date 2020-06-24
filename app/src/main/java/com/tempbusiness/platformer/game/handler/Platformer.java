@@ -4,17 +4,16 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
+import com.tempbusiness.platformer.game.gameobject.player.PlayerWalkPhysics;
 import com.tempbusiness.platformer.game.graphics.Box;
 import com.tempbusiness.platformer.game.level.Controller;
-import com.tempbusiness.platformer.game.touch.Touchable;
 import com.tempbusiness.platformer.game.Game;
 import com.tempbusiness.platformer.game.level.Camera;
 import com.tempbusiness.platformer.game.level.Room;
 import com.tempbusiness.platformer.game.gameobject.Block;
-import com.tempbusiness.platformer.game.graphics.Button;
 import com.tempbusiness.platformer.game.graphics.Graphic;
 import com.tempbusiness.platformer.game.gameobject.GameObject;
-import com.tempbusiness.platformer.game.gameobject.Player;
+import com.tempbusiness.platformer.game.gameobject.player.Player;
 import com.tempbusiness.platformer.game.graphics.Display;
 import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
 
@@ -94,6 +93,8 @@ public class Platformer extends GameHandler {
 
             }
         }
+
+//        PlayerWalkPhysics.debugPMeterRender(r);
     }
 
     public List<Graphic> getGameObjects() {
