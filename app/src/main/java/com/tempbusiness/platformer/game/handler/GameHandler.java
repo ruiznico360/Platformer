@@ -47,5 +47,5 @@ public class GameHandler {
         return touchables;
     }
 
-    public void superTick() {}
+    public boolean superTick() {return true;}
 }

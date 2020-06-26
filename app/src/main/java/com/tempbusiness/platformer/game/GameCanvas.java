@@ -1,17 +1,12 @@
 package com.tempbusiness.platformer.game;
 
-import android.content.Context;
 import android.graphics.Canvas;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 
-import com.tempbusiness.platformer.util.Transition;
-import com.tempbusiness.platformer.util.Util;
-
 public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
     private Game game;
-//    private Transition currentTransition;
 
     protected GameCanvas(Game game) {
         super(game.getContext());
@@ -20,7 +15,7 @@ public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
         getHolder().addCallback(this);
         setWillNotDraw(false);
 
-        Transition.setupResources();
+//        Transition.setupResources();
     }
 
     @Override

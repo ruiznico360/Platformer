@@ -2,7 +2,8 @@ package com.tempbusiness.platformer.game.level;
 
 import android.graphics.Color;
 
-import com.tempbusiness.platformer.game.gameobject.EntityUtil;
+import com.tempbusiness.platformer.game.gameobject.block.Block;
+import com.tempbusiness.platformer.game.gameobject.block.Warpzone;
 import com.tempbusiness.platformer.game.gameobject.player.Player;
 import com.tempbusiness.platformer.game.gameobject.player.PlayerWalkPhysics;
 import com.tempbusiness.platformer.game.graphics.Button;
@@ -19,6 +20,7 @@ public class Controller {
     private Player player;
     private PlayerWalkPhysics playerWalkPhysics;
     private MoveState moveState;
+    private Warpzone targetWarpzone;
 
 
     public Controller(Platformer handler) {
@@ -49,9 +51,23 @@ public class Controller {
         handler.addExternalGraphic(action);
     }
 
+    public void setVisibility(boolean visibility) {
+        left.visible = visibility;
+        right.visible = visibility;
+        jump.visible = visibility;
+
+        action.visible = false;
+        up.visible = false;
+        down.visible = false;
+    }
+
     public void update(Player player) {
         this.player = player;
         playerWalkPhysics.setPlayer(player);
+    }
+
+    public void setTargetWarpzone(Warpzone targetWarpzone) {
+        this.targetWarpzone = targetWarpzone;
     }
 
     public void setMoveState(MoveState m) {
@@ -63,10 +79,18 @@ public class Controller {
     }
 
     public void checkControls() {
-        if (moveState == MoveState.WALK) {
+        action.visible = targetWarpzone != null;
+        if (moveState == MoveState.NONE) return;
+
+        if (action.isInTouch()) handleActionButton();
+        else if (moveState == MoveState.WALK) {
             if (DEBUG) debug();
             else playerWalkPhysics.handleWalk(left.isInTouch(), right.isInTouch(), jump.isInTouch());
         }
+    }
+
+    private void handleActionButton() {
+        if (targetWarpzone != null) targetWarpzone.use(player);
     }
 
     private void debug() {

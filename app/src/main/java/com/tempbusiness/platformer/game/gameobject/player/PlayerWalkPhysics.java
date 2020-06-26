@@ -9,12 +9,12 @@ import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
 import com.tempbusiness.platformer.util.Util;
 
 public class PlayerWalkPhysics {
-    public static final float JUMP_VEL = 0.31f, MAX_RUN_SPEED = 0.3f, RUN_SPEED = 0.2f, RUN_ACC = 0.0075f, RUN_DEC = 1.5f;
+    public static final float JUMP_VEL = 0.31f, MAX_RUN_SPEED = 0.3f, RUN_SPEED = 0.2f, RUN_ACC = 0.0075f, AIR_ACC = 0.0075f, RUN_DEC = 1.5f;
     private final int MAX_JUMP_FRAMES = 15;
     private Player player;
     private float jumpPower;
     private int jumpCounter;
-    private static PMeter pMeter;
+    private PMeter pMeter;
 
     public void setPlayer(Player player) {
         this.player = player;
@@ -43,15 +43,17 @@ public class PlayerWalkPhysics {
         boolean grounded = player.isGrounded();
         boolean turning = false;
 
+        float acc = grounded ? RUN_ACC : AIR_ACC;
+
         if (left) {
             if (player.velX > 0) turning = true;
 
-            EntityUtil.accelerateXTo(player, -pMeter.currentMaxSpeed, RUN_ACC);
+            EntityUtil.accelerateXTo(player, -pMeter.currentMaxSpeed, acc);
             player.setFacingRight(false);
         }else if (right) {
             if (player.velX < 0) turning = true;
 
-            EntityUtil.accelerateXTo(player, pMeter.currentMaxSpeed, RUN_ACC);
+            EntityUtil.accelerateXTo(player, pMeter.currentMaxSpeed, acc);
             player.setFacingRight(true);
         }else if (grounded){
             EntityUtil.accelerateXTo(player, 0, RUN_ACC/RUN_DEC);
@@ -63,11 +65,6 @@ public class PlayerWalkPhysics {
         player.setTurning(turning);
 
         if (grounded) pMeter.tick();
-    }
-
-    public static void debugPMeterRender(GRenderer r) {
-        r.drawRect(Display.rect(0,0,1000,200), Color.BLACK);
-        r.drawRect(Display.rect(10,10,980 * ((float)pMeter.size / pMeter.MAX),180), pMeter.isFull() ? Color.RED : Color.YELLOW);
     }
 
     private class PMeter {

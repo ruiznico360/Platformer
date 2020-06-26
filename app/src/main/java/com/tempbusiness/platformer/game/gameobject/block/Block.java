@@ -1,7 +1,11 @@
-package com.tempbusiness.platformer.game.gameobject;
+package com.tempbusiness.platformer.game.gameobject.block;
 
 import android.graphics.Color;
 
+import com.tempbusiness.platformer.game.gameobject.Entity;
+import com.tempbusiness.platformer.game.gameobject.GameObject;
+import com.tempbusiness.platformer.game.gameobject.Hitbox;
+import com.tempbusiness.platformer.game.gameobject.player.Player;
 import com.tempbusiness.platformer.game.handler.Platformer;
 import com.tempbusiness.platformer.game.level.Room;
 import com.tempbusiness.platformer.fileio.FileLoader.Image;
@@ -30,7 +34,7 @@ public class Block extends GameObject {
         }
     }
 
-    protected float[] interactEntity(Entity en, Hitbox prev) {
+    public float[] interactEntity(Entity en, Hitbox prev) {
         float[] interaction = new float[]{en.x, en.y, en.velX, en.velY, 0};
         Hitbox h = getHitbox();
 
@@ -70,11 +74,4 @@ public class Block extends GameObject {
         }
     }
 
-    public static class Warpzone extends GameObject {
-        public Room room;
-        public Warpzone(float x, float y, Platformer handler, Room r) {
-            super(x,y,1,1, Color.BLACK, handler);
-            this.room = r;
-        }
-    }
 }

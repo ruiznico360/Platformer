@@ -1,15 +1,13 @@
 package com.tempbusiness.platformer.game.level;
 
-import com.tempbusiness.platformer.game.gameobject.Entity;
 import com.tempbusiness.platformer.game.handler.Platformer;
-import com.tempbusiness.platformer.game.gameobject.Block;
+import com.tempbusiness.platformer.game.gameobject.block.Block;
 import com.tempbusiness.platformer.game.gameobject.player.Player;
 import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
 
 public class Camera {
     private final float Y_MAX_OFFSET, X_MAX_OFFSET, BASE_SPEED, CENTER_X, CENTER_Y, LEVEL_MIN_SPEED;
     private Platformer handler;
-    private int controlS;
     private float x,y, y_offset, x_offset;
     private Player player;
     private Room room;
@@ -29,7 +27,6 @@ public class Camera {
     public void update(Player p, Room r) {
         this.player = p;
         this.room = r;
-        tick();
     }
 
     public float x() {

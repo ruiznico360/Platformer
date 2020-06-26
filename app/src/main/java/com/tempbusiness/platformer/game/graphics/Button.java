@@ -13,7 +13,7 @@ public class Button extends Box{
     public GameHandler handler;
 
     public boolean isInTouch() {
-        return area.isInTouch();
+        return area.isInTouch() && visible;
     }
     public Button(int color, GameHandler handler, Touchable custom) {
         super(custom.x(),custom.y(),custom.w(),custom.h(),color);

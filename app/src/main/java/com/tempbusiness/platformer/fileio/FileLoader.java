@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory;
 import com.tempbusiness.platformer.R;
 import com.tempbusiness.platformer.game.graphics.Display;
 import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
+import com.tempbusiness.platformer.game.graphics.transition.BlackCircle;
 
 public class FileLoader {
 
@@ -16,12 +17,15 @@ public class FileLoader {
             if (i.gObject) i.img = Display.resizeToScale(i.img, GRenderer.BLOCK_SIZE);
             if (i.genInv) i.inv = Display.inverse(i.img);
         }
+
+        BlackCircle.setupResources();
     }
     public enum Image {
         BLOCK("block"), GRASS1("grass1"),GRASS2("grass2"),GRASS3("grass3"),
         PLAYER("player"), PLAYER_WALK("player_walk", true), PLAYER_TURN("player_turn",true),
         PLAYER_JUMP_SLOW("player_jump_slow", true), PLAYER_JUMP_FAST("player_jump_fast",true),
-        PLAYER_RUN("player_run",true), PLAYER_STILL("player_still",true)
+        PLAYER_RUN_1("player_run_1",true),PLAYER_RUN_2("player_run_2",true), PLAYER_STILL("player_still",true),
+        PLAYER_FORWARD("player_forward", true), PLAYER_BACKWARD("player_backward", true)
         ;
 
         public String name;

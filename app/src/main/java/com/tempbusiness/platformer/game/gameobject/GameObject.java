@@ -25,7 +25,7 @@ public class GameObject extends Box {
         }
     }
 
-    protected Hitbox getHitbox() {
+    public Hitbox getHitbox() {
         return new Hitbox(x,y,w,h);
     }
 

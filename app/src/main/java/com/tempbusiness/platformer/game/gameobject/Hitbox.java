@@ -1,7 +1,7 @@
 package com.tempbusiness.platformer.game.gameobject;
 
 public class Hitbox {
-    protected float l,t,r,b;
+    public float l,t,r,b;
 
 
 
@@ -29,6 +29,8 @@ public class Hitbox {
     public boolean intersects(Hitbox hit) {
         return alignedX(hit) && alignedY(hit);
     }
+
+    public boolean contains(Hitbox hit) { return l <= hit.l && r >= hit.r&& b <= hit.b && t >= hit.t ; }
 
     public boolean alignedX(Hitbox hit) {
         return (hit.l < r && hit.r > l);

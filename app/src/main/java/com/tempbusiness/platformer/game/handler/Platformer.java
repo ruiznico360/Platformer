@@ -4,18 +4,20 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
-import com.tempbusiness.platformer.game.gameobject.player.PlayerWalkPhysics;
+import com.tempbusiness.platformer.game.gameobject.block.Warpzone;
 import com.tempbusiness.platformer.game.graphics.Box;
+import com.tempbusiness.platformer.game.graphics.transition.BlackCircle;
 import com.tempbusiness.platformer.game.level.Controller;
 import com.tempbusiness.platformer.game.Game;
 import com.tempbusiness.platformer.game.level.Camera;
 import com.tempbusiness.platformer.game.level.Room;
-import com.tempbusiness.platformer.game.gameobject.Block;
+import com.tempbusiness.platformer.game.gameobject.block.Block;
 import com.tempbusiness.platformer.game.graphics.Graphic;
 import com.tempbusiness.platformer.game.gameobject.GameObject;
 import com.tempbusiness.platformer.game.gameobject.player.Player;
 import com.tempbusiness.platformer.game.graphics.Display;
 import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
+import com.tempbusiness.platformer.game.graphics.transition.Transition;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +30,7 @@ public class Platformer extends GameHandler {
     private Camera cam;
     private Controller controller;
     private SpecialBlocks specialBlocks;
+    private Transition transition;
 
 
     public Platformer(Game gameInstance) {
@@ -38,15 +41,30 @@ public class Platformer extends GameHandler {
         this.cam = new Camera(this);
         this.controller = new Controller(this);
 
-        changeRoom(new Room(this, Room.ID.L1_1));
+
+        setupCurrentRoom(new Room(this, Room.ID.L1_1));
     }
 
-    public void changeRoom(Room r) {
+    public void changeRoom(final Room room) {
+        float pX = GRenderer.displayX(player.x + player.w / 2, this);
+        float pY = GRenderer.displayY(player.y + player.h / 2,this);
+
+        float r = GRenderer.farthestEdgeDist(pX, pY);
+
+        startTransition(new BlackCircle(this, new Runnable() {
+            @Override
+            public void run() {
+                setupCurrentRoom(room);
+            }
+        }, pX, pY, r, true));
+    }
+
+    private void setupCurrentRoom(Room room) {
         graphics.clear();
 
         specialBlocks = new SpecialBlocks();
 
-        this.currentRoom = r;
+        this.currentRoom = room;
         this.currentRoom.setup();
 
         player = new Player(currentRoom.pStartX, currentRoom.pStartY,this);
@@ -57,10 +75,32 @@ public class Platformer extends GameHandler {
 
         setupBlackbars();
         controller.setupButtons();
-        controller.setMoveState(r.moveState);
+        controller.setMoveState(currentRoom.moveState);
+        gTick();
+
+        float pX = GRenderer.displayX(player.x + player.w / 2, this);
+        float pY = GRenderer.displayY(player.y + player.h / 2,this);
+        float r = GRenderer.farthestEdgeDist(pX, pY);
+        Transition t = new BlackCircle(this, new Runnable() {
+            @Override
+            public void run() {
+
+            }
+        }, pX, pY, r, false);
+
+        t.setDelay(30);
+
+        startTransition(t);
     }
-    public void superTick() {
-        controller.checkControls();
+
+    public boolean superTick() {
+        if (transition == null) {
+            controller.checkControls();
+            return true;
+        }
+
+        transition.tick();
+        return false;
     }
 
     private void setupBlackbars() {
@@ -71,15 +111,52 @@ public class Platformer extends GameHandler {
     }
 
     public void tick() {
-        superTick();
-        gTick();
-        cam.tick();
+        if (superTick()) gTick();
     }
 
     private void gTick() {
         for (int i = 0; i < getGameObjects().size(); i++) {
             ((GameObject)getGameObjects().get(i)).tick();
         }
+
+        specialBlockCollision();
+        cam.tick();
+    }
+
+    public void startTransition(Transition t) {
+        this.transition = t;
+        controller.setVisibility(false);
+        t.start();
+    }
+
+    public Transition getTransition() {
+        return transition;
+    }
+
+    public void endTransition(Runnable run) {
+        transition = null;
+        controller.setVisibility(true);
+        run.run();
+    }
+
+    private void specialBlockCollision() {
+        boolean canClimb = false;
+        controller.setTargetWarpzone(null);
+
+        for (Block.Climbable b : specialBlocks.climbables) {
+            if (b.getHitbox().intersects(player.getHitbox())) {
+                canClimb = true;
+                break;
+            }
+        }
+        for (Warpzone b : specialBlocks.warpzones) if (b.usable(player)) controller.setTargetWarpzone(b);
+
+//        for (Block.Climbable b : specialBlocks.climbables) {
+//            if (b.getHitbox().intersects(player.getHitbox())) {
+//                canClimb = true;
+//                break;
+//            }
+//        }
     }
 
     public void render(Canvas canvas) {
@@ -94,6 +171,7 @@ public class Platformer extends GameHandler {
             }
         }
 
+        if (transition != null) transition.render(r);
 //        PlayerWalkPhysics.debugPMeterRender(r);
     }
 
@@ -111,8 +189,8 @@ public class Platformer extends GameHandler {
     public void addGameObject(GameObject g) {
         if (g instanceof Block.Climbable) {
             specialBlocks.climbables.add((Block.Climbable)g);
-        }else if (g instanceof Block.Warpzone) {
-            specialBlocks.warpzones.add(((Block.Warpzone)g));
+        }else if (g instanceof Warpzone) {
+            specialBlocks.warpzones.add(((Warpzone)g));
         }
 
         graphics.add(g, 1);
@@ -127,6 +205,6 @@ public class Platformer extends GameHandler {
     private class SpecialBlocks {
         private ArrayList<Block.Climbable> climbables = new ArrayList<>();
         private ArrayList<int[]> waters = new ArrayList<>();
-        private ArrayList<Block.Warpzone> warpzones = new ArrayList<>();
+        private ArrayList<Warpzone> warpzones = new ArrayList<>();
     }
 }
