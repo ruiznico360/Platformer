@@ -2,7 +2,9 @@ package com.tempbusiness.platformer.game.graphics;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Canvas;
 import android.graphics.Matrix;
+import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.DisplayMetrics;
@@ -10,6 +12,7 @@ import android.util.TypedValue;
 
 import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
 import com.tempbusiness.platformer.game.handler.Platformer;
+import com.tempbusiness.platformer.util.Util;
 
 public class Display {
     public static int WIDTH;
@@ -63,12 +66,28 @@ public class Display {
         return TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, dp, c.getResources().getDisplayMetrics());
     }
 
-    public static Bitmap resizeToScale(Bitmap original, int newWidth) {
-        return Bitmap.createScaledBitmap(original, newWidth, (int)((float) original.getHeight() * ((float)(newWidth) / (float)original.getWidth())), false);
+    public static Bitmap resizeToScaleH(Bitmap original, float newHeight) {
+        if (newHeight == -1) return original;
+
+        return Bitmap.createScaledBitmap(original, (int)scaledWidthForBitmap(newHeight, original),(int) newHeight, false);
     }
+    public static Bitmap resizeToScaleW(Bitmap original, float newWidth) {
+        if (newWidth == -1) return original;
+
+        return Bitmap.createScaledBitmap(original, (int) newWidth, (int)scaledHeightForBitmap(newWidth, original), false);
+    }
+
     public static Bitmap inverse(Bitmap b) {
         Matrix matrix = new Matrix();
         matrix.setScale(-1,1);
         return Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, true);
+    }
+
+    public static float scaledWidthForBitmap(float height, Bitmap b) {
+        return b.getWidth() * (height / b.getHeight());
+    }
+
+    public static float scaledHeightForBitmap(float width, Bitmap b) {
+        return b.getHeight() * (width / b.getWidth());
     }
 }

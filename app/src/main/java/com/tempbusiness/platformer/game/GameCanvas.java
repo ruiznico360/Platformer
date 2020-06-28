@@ -20,9 +20,7 @@ public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
 
     @Override
     public void onDraw(Canvas canvas) {
-        game.getHandler().tick();
-        game.getHandler().ticksSinceStart++;
-
+        tickGameHandler();
         handleGraphics(canvas);
     }
 
@@ -40,6 +38,11 @@ public class GameCanvas extends SurfaceView implements SurfaceHolder.Callback {
             }
         });
 
+    }
+
+    private void tickGameHandler() {
+        game.getHandler().tick();
+        game.getHandler().ticksSinceStart++;
     }
     private synchronized void handleGraphics(Canvas canvas) {
         game.getHandler().render(canvas);

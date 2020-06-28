@@ -1,5 +1,7 @@
 package com.tempbusiness.platformer.game;
 
+import com.tempbusiness.platformer.util.Util;
+
 public class GameLoop implements Runnable {
     private static final int FRAMES_PER_SECOND = 60;
     private boolean running = false;

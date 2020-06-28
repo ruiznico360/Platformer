@@ -5,7 +5,6 @@ import android.graphics.Rect;
 
 import com.tempbusiness.platformer.game.handler.Platformer;
 import com.tempbusiness.platformer.game.graphics.Display;
-import com.tempbusiness.platformer.fileio.FileLoader;
 
 public class GRenderer extends Renderer {
     public static int BLOCK_SIZE, G_WIDTH, G_HEIGHT;

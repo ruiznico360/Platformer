@@ -60,4 +60,8 @@ public abstract class Transition {
     public enum Type {
         MARCH_FORWARD, MARCH_BACKWARD
     }
+
+    public static void init() {
+        BlackCircle.setupResources();
+    }
 }

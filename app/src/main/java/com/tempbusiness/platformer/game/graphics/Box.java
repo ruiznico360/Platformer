@@ -3,7 +3,7 @@ package com.tempbusiness.platformer.game.graphics;
 import android.graphics.Rect;
 
 import com.tempbusiness.platformer.game.graphics.rendering.Renderer;
-import com.tempbusiness.platformer.fileio.FileLoader.Image;
+import com.tempbusiness.platformer.resources.Image;
 
 public class Box extends Graphic {
 
@@ -19,7 +19,7 @@ public class Box extends Graphic {
         if (img == null) {
             canvas.drawRect(dst, color);
         }else{
-            canvas.drawBitmap(dst, img.img);
+            canvas.drawBitmap(dst, img.getImage());
         }
     }
 }

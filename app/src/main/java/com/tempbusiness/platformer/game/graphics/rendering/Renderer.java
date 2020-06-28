@@ -6,7 +6,6 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 
 import com.tempbusiness.platformer.game.graphics.Display;
-import com.tempbusiness.platformer.fileio.FileLoader;
 
 public class Renderer {
     public Canvas canvas;
@@ -21,8 +20,8 @@ public class Renderer {
     }
 
     public void drawBitmap(Rect r, Bitmap img) {
-        if (oob(r)) return;
-        canvas.drawBitmap(img, null, r, null);
+        if (oob(r) || r.width() == 0 || r.height() == 0) return;
+        canvas.drawBitmap(img,null, r, new Paint(Paint.ANTI_ALIAS_FLAG));
     }
 
     private boolean oob(Rect r) {
@@ -34,4 +33,5 @@ public class Renderer {
         p.setColor(color);
         return p;
     }
+
 }

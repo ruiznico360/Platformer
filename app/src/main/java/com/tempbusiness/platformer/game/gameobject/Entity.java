@@ -1,9 +1,9 @@
 package com.tempbusiness.platformer.game.gameobject;
 
+import com.tempbusiness.platformer.resources.Image;
 import com.tempbusiness.platformer.game.gameobject.block.Block;
 import com.tempbusiness.platformer.game.graphics.Graphic;
 import com.tempbusiness.platformer.game.handler.Platformer;
-import com.tempbusiness.platformer.fileio.FileLoader;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public abstract class Entity extends GameObject{
     public Entity(float x, float y, float w, float h, int color, Platformer handler) {
         super(x,y,w,h,color, handler);
     }
-    public Entity(float x, float y, float w, float h, FileLoader.Image img, Platformer handler) {
+    public Entity(float x, float y, float w, float h, Image img, Platformer handler) {
         super(x,y,w,h,img, handler);
     }
 

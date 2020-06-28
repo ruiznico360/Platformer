@@ -6,14 +6,13 @@ import android.os.Handler;
 import android.view.KeyEvent;
 import android.view.WindowManager;
 
+import com.tempbusiness.platformer.game.graphics.transition.Transition;
 import com.tempbusiness.platformer.game.level.Controller;
 import com.tempbusiness.platformer.game.touch.TouchAdapter;
 import com.tempbusiness.platformer.game.touch.Touchable;
 import com.tempbusiness.platformer.game.handler.GameHandler;
 import com.tempbusiness.platformer.game.handler.MainMenu;
-import com.tempbusiness.platformer.game.handler.Platformer;
 import com.tempbusiness.platformer.game.graphics.Display;
-import com.tempbusiness.platformer.fileio.FileLoader;
 
 public class Game {
     private Activity c;
@@ -98,7 +97,7 @@ public class Game {
 
     private void init() {
         Display.initDimens(c);
-        FileLoader.setup(c);
+        Transition.init();
         c.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         ui = new Handler();

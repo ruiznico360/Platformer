@@ -1,20 +1,25 @@
 package com.tempbusiness.platformer.game.handler;
 
+import android.content.Context;
 import android.graphics.Canvas;
 
 import com.tempbusiness.platformer.game.touch.Touchable;
 import com.tempbusiness.platformer.game.Game;
 import com.tempbusiness.platformer.game.graphics.rendering.GraphicsLayerer;
 import com.tempbusiness.platformer.game.graphics.rendering.Renderer;
+import com.tempbusiness.platformer.resources.Image;
+import com.tempbusiness.platformer.util.Util;
 
 import java.util.ArrayList;
+import java.util.List;
 
-public class GameHandler {
+public abstract class GameHandler {
     protected GraphicsLayerer graphics;
     private ArrayList<Touchable> touchables = new ArrayList<>();
     public int ticksSinceStart;
     protected Game game;
     protected Renderer renderer;
+    protected abstract List<String> requiredResources();
 
     public GameHandler(Game game, int layers) {
         this.game = game;
@@ -45,6 +50,20 @@ public class GameHandler {
 
     public ArrayList<Touchable> getTouchables() {
         return touchables;
+    }
+
+    protected final void loadResources() {
+        List<String> res = requiredResources();
+        for (Image i : Image.values()) {
+            int index = res.indexOf(i.getName());
+
+            if (index == -1) i.unload();
+            else {
+                Util.log(index);
+                i.load(game.getContext());
+                res.remove(index);
+            }
+        }
     }
 
     public boolean superTick() {return true;}

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 
+import com.tempbusiness.platformer.game.gameobject.Background;
 import com.tempbusiness.platformer.game.gameobject.block.Warpzone;
 import com.tempbusiness.platformer.game.graphics.Box;
 import com.tempbusiness.platformer.game.graphics.transition.BlackCircle;
@@ -24,7 +25,7 @@ import java.util.List;
 
 public class Platformer extends GameHandler {
     public final static int BLOCKS_PER_Y = 14, BLOCKS_PER_X = 25;
-    private final int LAYER_SIZE, GAME_LAYER = 1;
+    private static final int LAYER_SIZE = 3, GAME_LAYER = 1;
     private Player player;
     private Room currentRoom;
     private Camera cam;
@@ -34,9 +35,8 @@ public class Platformer extends GameHandler {
 
 
     public Platformer(Game gameInstance) {
-        super(gameInstance, 3);
+        super(gameInstance, LAYER_SIZE);
 
-        this.LAYER_SIZE = graphics.totalLayers();
         this.renderer = new GRenderer();
         this.cam = new Camera(this);
         this.controller = new Controller(this);
@@ -66,6 +66,7 @@ public class Platformer extends GameHandler {
 
         this.currentRoom = room;
         this.currentRoom.setup();
+        loadResources();
 
         player = new Player(currentRoom.pStartX, currentRoom.pStartY,this);
         addGameObject(player);
@@ -172,7 +173,6 @@ public class Platformer extends GameHandler {
         }
 
         if (transition != null) transition.render(r);
-//        PlayerWalkPhysics.debugPMeterRender(r);
     }
 
     public List<Graphic> getGameObjects() {
@@ -184,6 +184,17 @@ public class Platformer extends GameHandler {
     }
     public Camera getCam() {
         return cam;
+    }
+
+    public Room getCurrentRoom() {
+        return currentRoom;
+    }
+    public Player getPlayer() {
+        return player;
+    }
+
+    protected List<String> requiredResources() {
+        return currentRoom.getRequiredImages();
     }
 
     public void addGameObject(GameObject g) {
@@ -198,8 +209,8 @@ public class Platformer extends GameHandler {
     public void addExternalGraphic(Graphic g) {
         graphics.add(g, 2);
     }
-    public void addBackgroundGraphic(Graphic g) {
-        graphics.add(g, 0);
+    public void addBackgroundGraphic(Background b) {
+        graphics.add(b, 0);
     }
 
     private class SpecialBlocks {

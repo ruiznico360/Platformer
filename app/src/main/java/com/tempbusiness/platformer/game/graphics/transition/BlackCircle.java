@@ -13,6 +13,7 @@ import com.tempbusiness.platformer.game.graphics.Display;
 import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
 import com.tempbusiness.platformer.game.graphics.rendering.Renderer;
 import com.tempbusiness.platformer.game.handler.Platformer;
+import com.tempbusiness.platformer.util.Util;
 
 public class BlackCircle extends Transition {
     private static Bitmap CIRCLE_RESOURCE;
@@ -51,7 +52,7 @@ public class BlackCircle extends Transition {
         for (Rect r : boxes) renderer.drawRect(r, COLOR);
     }
 
-    public static void setupResources() {
+    protected static void setupResources() {
         final int res = 100;
         CIRCLE_RESOURCE = Bitmap.createBitmap(res,res,Bitmap.Config.ARGB_8888);
         RectF outerRectangle = new RectF(0, 0, res, res);

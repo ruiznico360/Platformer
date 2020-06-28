@@ -3,7 +3,7 @@ package com.tempbusiness.platformer.game.gameobject;
 import com.tempbusiness.platformer.game.handler.Platformer;
 import com.tempbusiness.platformer.game.graphics.Box;
 import com.tempbusiness.platformer.game.graphics.rendering.GRenderer;
-import com.tempbusiness.platformer.fileio.FileLoader.Image;
+import com.tempbusiness.platformer.resources.Image;
 
 public class GameObject extends Box {
     protected Platformer handler;
@@ -21,7 +21,7 @@ public class GameObject extends Box {
         if (img == null) {
             canvas.drawGRect(handler, x,y,w,h, color);
         }else{
-            canvas.drawGBitmap(handler, x,y,w,h, img.img);
+            canvas.drawGBitmap(handler, x,y,w,h, img.getImage());
         }
     }
 

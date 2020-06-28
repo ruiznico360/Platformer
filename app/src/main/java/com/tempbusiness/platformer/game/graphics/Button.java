@@ -2,10 +2,10 @@ package com.tempbusiness.platformer.game.graphics;
 
 import android.graphics.Color;
 
+import com.tempbusiness.platformer.resources.Image;
 import com.tempbusiness.platformer.game.handler.GameHandler;
 import com.tempbusiness.platformer.game.touch.Touchable;
 import com.tempbusiness.platformer.game.graphics.rendering.Renderer;
-import com.tempbusiness.platformer.fileio.FileLoader;
 
 public class Button extends Box{
     public Touchable area;
@@ -22,7 +22,7 @@ public class Button extends Box{
 
         handler.getTouchables().add(area);
     }
-    public Button(FileLoader.Image img,  GameHandler handler, Touchable custom) {
+    public Button(Image img, GameHandler handler, Touchable custom) {
         super(custom.x(),custom.y(),custom.w(),custom.h(),img);
         this.area = custom;
         this.handler = handler;

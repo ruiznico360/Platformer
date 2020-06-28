@@ -1,15 +1,15 @@
 package com.tempbusiness.platformer.game.level;
 
-import android.graphics.Color;
-
+import com.tempbusiness.platformer.resources.Image;
+import com.tempbusiness.platformer.game.gameobject.Background;
 import com.tempbusiness.platformer.game.gameobject.block.Warpzone;
 import com.tempbusiness.platformer.game.gameobject.player.Player;
 import com.tempbusiness.platformer.game.handler.Platformer;
 import com.tempbusiness.platformer.game.gameobject.block.Block;
-import com.tempbusiness.platformer.game.graphics.Box;
-import com.tempbusiness.platformer.game.graphics.Display;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public class Room {
     public float pStartX, pStartY;
@@ -28,11 +28,20 @@ public class Room {
         handler.changeRoom(new Room(handler,id));
     }
 
+    public List<String> getRequiredImages() {
+        List<String> images = new ArrayList<>();
+
+        for (Image i : Image.values()) {
+            images.add(i.getName());
+        }
+        return images;
+    }
+
     public void setup() {
         int width = 50;
 
         if (id.equals(ID.L1_1)) {
-            handler.addBackgroundGraphic(new Box(0,0, Display.WIDTH,Display.HEIGHT, Color.CYAN));
+            handler.addBackgroundGraphic(new Background(Image.BACKGROUND, handler));
             CAM_MAX_X = new Block(width, -10, Block.Type.BRICK, handler);
 
 //            CAM_Y_BOUNDS.add(new Block(-10, Platformer.BLOCKS_PER_Y-4, Block.Type.BRICK, handler));
@@ -83,7 +92,7 @@ public class Room {
 
 
         }else{
-            handler.addBackgroundGraphic(new Box(0,0, Display.WIDTH,Display.HEIGHT, Color.CYAN));
+//            handler.addBackgroundGraphic(new Background(0,0, Display.WIDTH,Display.HEIGHT, FileLoader.Image.BACKGROUND));
             CAM_MAX_X = new Block(width, -10, Block.Type.BRICK, handler);
             CAM_Y_BOUNDS.add(new Block(-10, Platformer.BLOCKS_PER_Y + 30, Block.Type.BRICK, handler));
 
